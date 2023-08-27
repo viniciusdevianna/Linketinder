@@ -1,40 +1,36 @@
 package scripts
 
 import groovy.json.JsonBuilder
-import model.Company
-import model.util.Address
-import model.util.CNPJ
 
 def nCompanies = 5
-def listOfCompanies = []
+def companyBuilder = new JsonBuilder()
+def file = new File("../data/companies.json")
+file.write("[")
 
 nCompanies.times {
-    def address = new Address(
-            country: "Brasil",
-            state: "RJ",
-            cep: "${it.toString() * 8}",
-            street: "Rua $it",
-            number: it,
-            complement: "AP 10$it"
-    )
-    def competencies = ["Java", "Groovy", "Git", "Github"]
-    def cnpj = new CNPJ(number: "58577114000189")
-    def company = new Company(
-            name: "Empresa $it",
-            email: "contato@empresa${it}.com",
-            description: "Uma empresa justa",
-            address: address,
-            competencies: competencies,
-            cnpj: cnpj,
-            nOpenJobs: it,
-            nJobsFullfilled: it
-    )
-    listOfCompanies << company
+    def i = it
+    companyBuilder {
+        name "Empresa $i"
+        email "contato@empresa${i}.com"
+        description "Uma empresa justa"
+        address {
+            country "Brasil"
+            state "RJ"
+            cep "${i.toString() * 8}"
+            street "Rua $i"
+            number i
+            complement "AP 10$i"
+        }
+        competencies "Java, Groovy, Git, Github"
+        cnpj {
+            number 58577114000189
+        }
+        nOpenJobs i
+        nJobsFullfilled i
+    }
+    if (i < nCompanies - 1) {
+        file << companyBuilder.toPrettyString() + ",\n"
+    } else {
+        file << companyBuilder.toPrettyString() + "]"
+    }
 }
-
-def file = new File("../data/companies.json")
-def builder = new JsonBuilder(listOfCompanies)
-
-file.write builder.toPrettyString()
-
-
