@@ -25,7 +25,7 @@ class CompanyDAO {
                     email: it["email"],
                     description: it["description"],
                     address: address,
-                    competencies: it["competencies"] as List,
+                    competencies: (it["competencies"] as String).split(", "),
                     cnpj: cnpj,
                     nOpenJobs: it["nOpenJobs"] as Integer,
                     nJobsFullfilled: it["nJobsFulfilled"] as Integer
