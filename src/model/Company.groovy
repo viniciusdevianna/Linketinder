@@ -1,5 +1,9 @@
 package model
 
-class Company extends User{
+import model.util.CNPJ
 
+class Company extends User{
+    CNPJ cnpj
+    Integer nOpenJobs
+    Integer nJobsFullfilled
 }

@@ -1,4 +1,4 @@
-package model
+package model.util
 
 class Address {
     String country
