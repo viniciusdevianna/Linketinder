@@ -26,7 +26,7 @@ nCompanies.times {
             number 58577114000189
         }
         nOpenJobs i
-        nJobsFullfilled i
+        nJobsFulfilled i
     }
     if (i < nCompanies - 1) {
         file << companyBuilder.toPrettyString() + ",\n"

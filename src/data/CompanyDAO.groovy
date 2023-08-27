@@ -8,7 +8,7 @@ import model.util.CNPJ
 class CompanyDAO {
     String path = "./data/companies.json"
 
-    def getAllCompanies() {
+    def read() {
         File database = new File(path)
         JsonSlurper parser = new JsonSlurper()
         def jsonObjects = parser.parse(database)
