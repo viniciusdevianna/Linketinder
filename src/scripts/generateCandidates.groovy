@@ -1,39 +1,37 @@
 package scripts
 
 import groovy.json.JsonBuilder
-import model.Candidate
-import model.util.Address
-import model.util.CPF
 
 def nCandidates = 5
-def listOfCandidates = []
+def candidateBuilder = new JsonBuilder()
+def file = new File("../data/candidates.json")
+file.write("[")
 
 nCandidates.times {
-    def address = new Address(
-            country: "Brasil",
-            state: "RJ",
-            cep: "${it.toString() * 8}",
-            street: "Rua $it",
-            number: it,
-            complement: "AP 10$it"
-    )
-    def competencies = ["Java", "Groovy", "Git", "Github"]
-    def cpf = new CPF(number: "13244636780")
-    def candidate = new Candidate(
-            name: "Candidato $it",
-            email: "candidato${it}@gmail.com",
-            description: "Um candidato dedicado",
-            address: address,
-            competencies: competencies,
-            cpf: cpf,
-            age: 25 + it,
-            education: ["Superior Completo",],
-            languages: ["Inglês",]
-    )
-    listOfCandidates << candidate
+    def i = it
+    candidateBuilder {
+        name "Candidato $i"
+        email "candidato${i}@gmail.com"
+        description "Um candidato dedicado"
+        address {
+            country "Brasil"
+            state "RJ"
+            cep "${i.toString() * 8}"
+            street "Rua $i"
+            number i
+            complement "AP 10$i"
+        }
+        competencies "Java, Groovy, Git, Github"
+        cpf {
+            number 13244636780
+        }
+        age 25 + i
+        education "Superior Completo, "
+        languages "Inglês, "
+    }
+    if (i < nCandidates - 1) {
+        file << candidateBuilder.toPrettyString() + ",\n"
+    } else {
+        file << candidateBuilder.toPrettyString() + "]"
+    }
 }
-
-def file = new File("../data/candidates.json")
-def builder = new JsonBuilder(listOfCandidates)
-
-file.write builder.toPrettyString()
