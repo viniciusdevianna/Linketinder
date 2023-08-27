@@ -2,8 +2,10 @@ package view
 
 import control.UserController
 import model.Candidate
+import model.Company
 import model.User
 import model.util.Address
+import model.util.CNPJ
 import model.util.CPF
 
 class MenuView {
@@ -78,6 +80,24 @@ class MenuView {
                     userController.saveCandidate(newCandidate)
                     break
                 case 2:
+                    scanner.nextLine()
+                    User newUser = getNewUserGeneralInfo()
+                    Address newUserAddress = getNewUserAddress()
+                    print "CNPJ: "
+                    CNPJ newUserCNPJ = new CNPJ(
+                            number: scanner.nextLine()
+                    )
+                    Company newCompany = new Company(
+                            name: newUser.name,
+                            email: newUser.email,
+                            description: newUser.description,
+                            address: newUserAddress,
+                            competencies: newUser.competencies,
+                            cnpj: newUserCNPJ,
+                            nOpenJobs: 0,
+                            nJobsFullfilled: 0
+                    )
+                    userController.saveCompany(newCompany)
                     break
                 case 3:
                     println "Voltando para o menu principal..."

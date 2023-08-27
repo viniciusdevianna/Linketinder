@@ -3,6 +3,7 @@ package control
 import data.CandidateDAO
 import data.CompanyDAO
 import model.Candidate
+import model.Company
 
 class UserController {
     CandidateDAO candidateDAO = new CandidateDAO()
@@ -18,5 +19,9 @@ class UserController {
 
     def saveCandidate(Candidate newCandidate) {
         candidateDAO.save(newCandidate)
+    }
+
+    def saveCompany(Company newCompany) {
+        companyDAO.save(newCompany)
     }
 }
