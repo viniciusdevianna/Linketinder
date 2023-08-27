@@ -4,7 +4,7 @@ import groovy.json.JsonBuilder
 
 def nCandidates = 5
 def candidateBuilder = new JsonBuilder()
-def file = new File("../data/candidates.json")
+def file = new File("data/candidates.json")
 file.write("[")
 
 nCandidates.times {

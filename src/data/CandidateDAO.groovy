@@ -12,6 +12,13 @@ class CandidateDAO {
     JsonSlurper parser = new JsonSlurper()
     JsonBuilder builder = new JsonBuilder()
 
+    CandidateDAO() {
+        if (!database.exists()) {
+            GroovyShell shell = new GroovyShell()
+            shell.evaluate(new File("scripts/generateCandidates.groovy"))
+        }
+    }
+
     def read() {
         def jsonObjects = parser.parse(database)
         def listOfCandidates = []

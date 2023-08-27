@@ -5,7 +5,7 @@
 
 ***
 
-# :student::fire::office_worker: Linketinder
+# :student::heart_on_fire::office_worker: Linketinder
 
 ## :question: O que é?
 O Linketinder é um aplicativo que conecta **candidatos** em busca de vagas com **empresas** em busca do trabalhador ideal para
@@ -26,7 +26,7 @@ do candidato.
 ---
 
 ## :newspaper: O que está planejado?
-- Fazer cadastro como candidato ou empresa, com a lista de competências ofertadas / desejadas
+- Fazer cadastro como candidato ou empresa, com a lista de competências ofertadas / desejadas :heavy_check_mark:
 - Como empresa: postar vagas
 - Como candidato: ver lista de vagas nos models dos perfis do Tinder
 - Como empresa: ver lista de candidatos nos moldes dos perfis do Tinder
@@ -36,7 +36,12 @@ do candidato.
 
 ## :gear: Como utilizar?
 
-#### :construction: WIP
+Para o projeto da trilha K1-T4, era necessário apenas listar os candidatos e empresas cadastrados e, opcionalmente,
+fazer cadastro de novos usuários. Para tal, basta clonar o repositório, buildar na sua IDE e rodar o arquivo `Main.groovy`
+que se encontra na pasta `src`.
+
+Na primeira vez que rodar o projeto, dois scripts gerarão arquivos `json` para candidatos e empresas, que servirão como
+base de dados. Os scripts também geram 5 candidatos e empresas aleatórios pré-cadastrados como foi pedido no enunciado.
 
 ## :space_invader: Bug fixes
 

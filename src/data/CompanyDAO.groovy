@@ -14,6 +14,13 @@ class CompanyDAO {
     JsonSlurper parser = new JsonSlurper()
     JsonBuilder builder = new JsonBuilder()
 
+    CompanyDAO() {
+        if (!database.exists()) {
+            GroovyShell shell = new GroovyShell()
+            shell.evaluate(new File("scripts/generateCompanies.groovy"))
+        }
+    }
+
     def read() {
         def jsonObjects = parser.parse(database)
         def listOfCompanies = []
