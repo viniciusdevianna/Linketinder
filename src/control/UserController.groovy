@@ -1,27 +1,22 @@
 package control
 
-import data.CandidateDAO
-import data.CompanyDAO
-import model.Candidate
+import data.UserDaoInterface
 import model.Company
+import model.User
 
 class UserController {
-    CandidateDAO candidateDAO = new CandidateDAO()
-    CompanyDAO companyDAO = new CompanyDAO()
+    private UserDaoInterface userDao
 
-    def getAllCandidates() {
-        return candidateDAO.read()
+    UserController(UserDaoInterface userDao) {
+        this.userDao = userDao
     }
 
-    def getAllCompanies() {
-        return companyDAO.read()
+    def getAllUsers() {
+        return userDao.read()
     }
 
-    def saveCandidate(Candidate newCandidate) {
-        candidateDAO.save(newCandidate)
+    def saveUser(User newUser) {
+        userDao.save(newUser)
     }
 
-    def saveCompany(Company newCompany) {
-        companyDAO.save(newCompany)
-    }
 }

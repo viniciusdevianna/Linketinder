@@ -9,8 +9,15 @@ import model.util.CNPJ
 import model.util.CPF
 
 class MenuView {
-    private final scanner = new Scanner(System.in)
-    private final userController = new UserController()
+    private final scanner
+    private final candidateControl
+    private final companyControl
+
+    MenuView(Scanner scanner, UserController candidateControl, UserController companyControl) {
+        this.scanner = scanner
+        this.candidateControl = candidateControl
+        this.companyControl = companyControl
+    }
 
     void drawMainMenu() {
         Integer option = 0
@@ -24,13 +31,13 @@ class MenuView {
             option = scanner.nextInt()
             switch (option) {
                 case 1:
-                    userController.getAllCandidates().each { println it }
+                    this.candidateControl.getAllUsers().each { println it }
                     break
                 case 2:
-                    userController.getAllCompanies().each { println it }
+                    this.companyControl.getAllUsers().each { println it }
                     break
                 case 3:
-                    drawNewUserMenu()
+                    this.drawNewUserMenu()
                     break
                 case 4:
                     println "Saindo do aplicativo..."
@@ -50,11 +57,16 @@ class MenuView {
             println "3 - Cancelar"
 
             newUserOption = scanner.nextInt()
+            if (newUserOption == 3) {
+                println "Voltando para o menu principal..."
+                continue
+            }
+
+            scanner.nextLine()
+            User newUser = this.getNewUserGeneralInfo()
+            Address newUserAddress = this.getNewUserAddress()
             switch (newUserOption) {
                 case 1:
-                    scanner.nextLine()
-                    User newUser = getNewUserGeneralInfo()
-                    Address newUserAddress = getNewUserAddress()
                     print "CPF: "
                     CPF newUserCPF = new CPF(
                         number: scanner.nextLine()
@@ -77,12 +89,9 @@ class MenuView {
                             education: newUserEducation,
                             languages: newUserLanguages
                     )
-                    userController.saveCandidate(newCandidate)
+                    this.candidateControl.saveUser(newCandidate)
                     break
                 case 2:
-                    scanner.nextLine()
-                    User newUser = getNewUserGeneralInfo()
-                    Address newUserAddress = getNewUserAddress()
                     print "CNPJ: "
                     CNPJ newUserCNPJ = new CNPJ(
                             number: scanner.nextLine()
@@ -97,15 +106,15 @@ class MenuView {
                             nOpenJobs: 0,
                             nJobsFullfilled: 0
                     )
-                    userController.saveCompany(newCompany)
+                    companyControl.saveUser(newCompany)
                     break
-                case 3:
-                    println "Voltando para o menu principal..."
+                default:
+                    println "Opção inválida"
             }
         }
     }
 
-    Address getNewUserAddress() {
+    private Address getNewUserAddress() {
         println "Insira seu endereço"
         print "País: "
         String newUserCountry = scanner.nextLine()
@@ -130,7 +139,7 @@ class MenuView {
         )
     }
 
-    User getNewUserGeneralInfo() {
+    private User getNewUserGeneralInfo() {
         print "Nome: "
         String newUserName = scanner.nextLine()
         print "E-mail: "

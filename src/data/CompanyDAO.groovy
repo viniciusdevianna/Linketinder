@@ -4,11 +4,13 @@ package data
 
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import model.Candidate
 import model.Company
+import model.User
 import model.util.Address
 import model.util.CNPJ
 
-class CompanyDAO {
+class CompanyDAO implements UserDaoInterface{
     String path = "./data/companies.json"
     File database = new File(path)
     JsonSlurper parser = new JsonSlurper()
@@ -21,7 +23,7 @@ class CompanyDAO {
         }
     }
 
-    def read() {
+    List<Candidate> read() {
         def jsonObjects = parser.parse(database)
         def listOfCompanies = []
         jsonObjects.each {
@@ -44,7 +46,7 @@ class CompanyDAO {
     }
 
     @SuppressWarnings('GroovyAssignabilityCheck')
-    def save(Company newCompany) {
+    void save(User newCompany) {
         builder {
             name newCompany.name
             email newCompany.email
