@@ -31,3 +31,6 @@ bin/
 
 ### Database ###
 *.json
+
+### Node ###
+frontend/node_modules/
