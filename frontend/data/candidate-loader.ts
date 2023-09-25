@@ -1,6 +1,6 @@
 import Candidate from "../models/Candidate"
 
-export default function load_candidates(): Candidate[] {
+export default function loadCandidates(): Candidate[] {
     let pre_load: Candidate[] = []
     let stored: string = localStorage.getItem("candidates") || ""
     if (stored) {

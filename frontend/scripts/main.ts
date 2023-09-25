@@ -1,28 +1,31 @@
 import User from "../models/User"
 import Candidate from "../models/Candidate"
 import Company from "../models/Company"
-import load_candidates from "../data/candidate-loader"
+import loadCandidates from "../data/candidate-loader"
 
 let candidates: Candidate[]
 let companies: Company[]
 
-function get_user_logged(): User | null {
+function getUserLogged(): User | null {
     let user: string | null = localStorage.getItem("user")
     return user ? new User(JSON.parse(user)) : null
 }
 
 function load(): void {
-    candidates = load_candidates()
-    companies = initial_load_companies()
-    let user: User | null = get_user_logged()
+    candidates = loadCandidates()
+    // companies = initialLoadCompanies()
+    let user: User | null = getUserLogged()
     if (!user) {
         window.location.href = "http://localhost:8080/templates/login.html"
+    } else {
+        populateMainUserCard(user)
+        populateCompetenciesCard(user)
     }
 
-    updateUserList(candidates)
+    // updateUserList(candidates)
 }
 
-function initial_load_companies(): Company[] {
+function initialLoadCompanies(): Company[] {
     let stored: string = localStorage.getItem("companies") || ""
     if (stored) {
         return JSON.parse(stored)
@@ -42,20 +45,47 @@ function initial_load_companies(): Company[] {
     return pre_load
 }
 
-function updateUserList(users: User[]): void {
-    const userList = document.getElementById("userList")
+// function updateUserList(users: User[]): void {
+//     const userList = document.getElementById("userList")
 
-    if (userList) {
-        userList.innerHTML = ""
+//     if (userList) {
+//         userList.innerHTML = ""
 
-        users.forEach((user: User) => {
-            let li = document.createElement("li")
-            li.className = "user-card"
-            li.id = `userCard${user.id}`
-            li.innerHTML = `<h3>${user.name}</h3>`
-            userList.appendChild(li)
-        })
+//         users.forEach((user: User) => {
+//             let li = document.createElement("li")
+//             li.className = "user-card"
+//             li.id = `userCard${user.id}`
+//             li.innerHTML = `<h3>${user.name}</h3>`
+//             userList.appendChild(li)
+//         })
+//     }
+// }
+
+function populateMainUserCard(user: User): void {
+    const userFullName = document.getElementById("userFullName")!
+    const userUsername = document.getElementById("userUsername")!
+    const userEmail = document.getElementById("userEmail")!
+    const userAge = document.getElementById("userAge")!
+
+    if (user) {
+        userFullName.innerHTML = user.name
+        userUsername.innerHTML = `@${user.username}`
+        userEmail.innerHTML = user.email
     }
+
+    if (user instanceof Candidate) {
+        userAge.innerHTML = user.age.toString()
+    }
+}
+
+function populateCompetenciesCard(user: User): void {
+    const competenciesList = document.getElementById("userCompetencies")
+    user.competencies.forEach((competency) => {
+        let li = document.createElement("li")
+        li.className = "competency-item"
+        li.innerHTML = competency
+        competenciesList?.appendChild(li)
+    })
 }
 
 const logout = document.getElementById("logout") as HTMLAnchorElement
