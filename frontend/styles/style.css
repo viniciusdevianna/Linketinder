@@ -164,6 +164,12 @@ footer {
     cursor: pointer;
 }
 
+.custom-btn:disabled {
+    background-color: var(--color-primary);
+    color: black;
+    box-shadow: -1px 1px grey;
+}
+
 .highlight {
     color: var(--color-secondary);
     font-weight: bolder;
@@ -183,6 +189,11 @@ footer {
     border-radius: 10px;
     width: 50%;
     margin: 1rem;
+}
+
+.specific-info {
+    display: flex;
+    flex-direction: column;
 }
 
 #logoLinkedin {

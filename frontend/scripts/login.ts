@@ -1,4 +1,4 @@
-import load_candidates from "../data/candidate-loader"
+import loadUsers from "../data/user-loader"
 
 const form = document.getElementById("loginForm")
 const signin = document.getElementById("signinLink")
@@ -9,7 +9,7 @@ if (form) {
         let username = (document.getElementById("username") as HTMLInputElement).value
         let password = (document.getElementById("password") as HTMLInputElement).value
 
-        let userList = load_candidates()
+        let userList = loadUsers()
         let user = userList.filter((user) => username === user.username && password === user.password)
         if (!user[0]) {
             alert("Usuário ou senha incorretos")

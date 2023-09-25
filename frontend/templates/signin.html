@@ -23,6 +23,10 @@
     </header>
 
     <main class="main-wrapper">
+        <div class="user-type-choice">
+            <button class="custom-btn" id="candidateBtn" value="Candidate" disabled>Candidato</button>
+            <button class="custom-btn" id="companyBtn" value="Company">Empresa</button>
+        </div>
         <div class="login-wrapper">
             <form action="" method="get" class="login-form" id="signinForm">
                 <label for="username">Login</label>
@@ -36,6 +40,10 @@
                     class="input-text">
                 <label for="password">Senha</label>
                 <input type="password" name="password" id="password" placeholder="senha" class="input-text">
+                <div id="ageInfo" class="specific-info">
+                    <label for="age">Idade</label>
+                    <input type="number" name="age" id="age" placeholder="18" class="input-text">
+                </div>
                 <input type="submit" value="Cadastrar" class="custom-btn">
             </form>
         </div>
