@@ -2,14 +2,18 @@ const path = require('path');
 
 module.exports = {
     mode: "development",
-    entry: "./scripts/main.ts",
+    entry: {
+        "main": "./scripts/main.ts",
+        "login": "./scripts/login.ts",
+        "signin": "./scripts/signin.ts"
+    },
     devServer: {
         static: __dirname,
         port: 8080,
         hot: true
     },
     output: {
-        filename: "main.js",
+        filename: "[name].js",
         path: path.join(__dirname, "scripts")
     },
     resolve: {

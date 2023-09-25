@@ -1,6 +1,7 @@
 import User from "../models/User"
 import Candidate from "../models/Candidate"
 import Company from "../models/Company"
+import load_candidates from "../data/candidate-loader"
 
 let candidates: Candidate[]
 let companies: Company[]
@@ -11,40 +12,14 @@ function get_user_logged(): User | null {
 }
 
 function load(): void {
+    candidates = load_candidates()
+    companies = initial_load_companies()
     let user: User | null = get_user_logged()
     if (!user) {
         window.location.href = "http://localhost:8080/templates/login.html"
     }
 
-    candidates = initial_load_candidates()
-    companies = initial_load_companies()
     updateUserList(candidates)
-}
-
-function initial_load_candidates(): Candidate[] {
-    let pre_load: Candidate[] = []
-    let stored: string = localStorage.getItem("candidates") || ""
-    if (stored) {
-        const saved_candidates = JSON.parse(stored)
-        saved_candidates.forEach((candidate: Candidate) => {
-            let newCandidate = new Candidate(candidate)
-            pre_load.push(newCandidate)
-        })
-        return pre_load
-    }
-
-    for (let i = 0; i < 5; i++) {
-        let candidate = new Candidate({
-            id: i,
-            name: `Candidato ${i}`,
-            email: `candidato${i}@gmail.com`,
-            competencies: ["TypeScript", "Java", "Groovy"],
-            age: 20 + i
-        })
-        pre_load.push(candidate)
-    }
-    localStorage.setItem("candidates", JSON.stringify(pre_load))
-    return pre_load
 }
 
 function initial_load_companies(): Company[] {
@@ -81,6 +56,11 @@ function updateUserList(users: User[]): void {
             userList.appendChild(li)
         })
     }
+}
+
+const logout = document.getElementById("logout") as HTMLAnchorElement
+logout.onclick = (event) => {
+    localStorage.removeItem("user")
 }
 
 load()

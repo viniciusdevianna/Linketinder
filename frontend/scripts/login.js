@@ -30,16 +30,6 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 
 /***/ }),
 
-/***/ "./models/Company.ts":
-/*!***************************!*\
-  !*** ./models/Company.ts ***!
-  \***************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst User_1 = __importDefault(__webpack_require__(/*! ./User */ \"./models/User.ts\"));\nclass Company extends User_1.default {\n}\nexports[\"default\"] = Company;\n\n\n//# sourceURL=webpack://frontend/./models/Company.ts?");
-
-/***/ }),
-
 /***/ "./models/User.ts":
 /*!************************!*\
   !*** ./models/User.ts ***!
@@ -50,13 +40,13 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nclas
 
 /***/ }),
 
-/***/ "./scripts/main.ts":
-/*!*************************!*\
-  !*** ./scripts/main.ts ***!
-  \*************************/
+/***/ "./scripts/login.ts":
+/*!**************************!*\
+  !*** ./scripts/login.ts ***!
+  \**************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst User_1 = __importDefault(__webpack_require__(/*! ../models/User */ \"./models/User.ts\"));\nconst Company_1 = __importDefault(__webpack_require__(/*! ../models/Company */ \"./models/Company.ts\"));\nconst candidate_loader_1 = __importDefault(__webpack_require__(/*! ../data/candidate-loader */ \"./data/candidate-loader.ts\"));\nlet candidates;\nlet companies;\nfunction get_user_logged() {\n    let user = localStorage.getItem(\"user\");\n    return user ? new User_1.default(JSON.parse(user)) : null;\n}\nfunction load() {\n    candidates = (0, candidate_loader_1.default)();\n    companies = initial_load_companies();\n    let user = get_user_logged();\n    if (!user) {\n        window.location.href = \"http://localhost:8080/templates/login.html\";\n    }\n    updateUserList(candidates);\n}\nfunction initial_load_companies() {\n    let stored = localStorage.getItem(\"companies\") || \"\";\n    if (stored) {\n        return JSON.parse(stored);\n    }\n    let pre_load = [];\n    for (let i = 0; i < 5; i++) {\n        let company = new Company_1.default({\n            id: i + 5,\n            name: `Empresa ${i}`,\n            email: `empresa${i}@gmail.com`,\n            competencies: [\"TypeScript\", \"Java\", \"Groovy\"]\n        });\n        pre_load.push(company);\n    }\n    localStorage.setItem(\"companies\", JSON.stringify(pre_load));\n    return pre_load;\n}\nfunction updateUserList(users) {\n    const userList = document.getElementById(\"userList\");\n    if (userList) {\n        userList.innerHTML = \"\";\n        users.forEach((user) => {\n            let li = document.createElement(\"li\");\n            li.className = \"user-card\";\n            li.id = `userCard${user.id}`;\n            li.innerHTML = `<h3>${user.name}</h3>`;\n            userList.appendChild(li);\n        });\n    }\n}\nconst logout = document.getElementById(\"logout\");\nlogout.onclick = (event) => {\n    localStorage.removeItem(\"user\");\n};\nload();\n\n\n//# sourceURL=webpack://frontend/./scripts/main.ts?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst candidate_loader_1 = __importDefault(__webpack_require__(/*! ../data/candidate-loader */ \"./data/candidate-loader.ts\"));\nconst form = document.getElementById(\"loginForm\");\nconst signin = document.getElementById(\"signinLink\");\nif (form) {\n    form.addEventListener(\"submit\", function (event) {\n        event.preventDefault();\n        let username = document.getElementById(\"username\").value;\n        let password = document.getElementById(\"password\").value;\n        let userList = (0, candidate_loader_1.default)();\n        let user = userList.filter((user) => username === user.username && password === user.password);\n        if (!user[0]) {\n            alert(\"Usuário ou senha incorretos\");\n        }\n        else {\n            localStorage.setItem(\"user\", JSON.stringify(user[0]));\n            window.location.href = \"http://localhost:8080/\";\n        }\n    });\n}\nif (signin) {\n    signin.onclick = (e) => [\n        window.location.href = \"http://localhost:8080/templates/signin.html\"\n    ];\n}\n\n\n//# sourceURL=webpack://frontend/./scripts/login.ts?");
 
 /***/ })
 
@@ -91,7 +81,7 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./scripts/main.ts");
+/******/ 	var __webpack_exports__ = __webpack_require__("./scripts/login.ts");
 /******/ 	
 /******/ })()
 ;

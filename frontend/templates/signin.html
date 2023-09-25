@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles/reset.css">
     <link rel="stylesheet" href="../styles/style.css">
-    <title>Login</title>
+    <title>Linketinder</title>
 </head>
 
 <body>
@@ -16,23 +16,29 @@
                 <h1 id="logoLinkedin">Linke</h1>
                 <h1 id="logoTinder">Tinder</h1>
             </div>
+            <div class="menu-navbar">
+                <a href="../index.html" class="navbar-link">Home</a>
+            </div>
         </div>
     </header>
 
     <main class="main-wrapper">
         <div class="login-wrapper">
-            <form action="" method="get" class="login-form" id="loginForm">
+            <form action="" method="get" class="login-form" id="signinForm">
                 <label for="username">Login</label>
-                <input type="text" name="username" id="username" placeholder="usuário" class="input-text">
+                <input type="text" name="username" id="username" placeholder="jhondoe" class="input-text">
+                <label for="name">Nome</label>
+                <input type="text" name="name" id="name" placeholder="Jhon Doe" class="input-text">
+                <label for="email">E-mail</label>
+                <input type="email" name="email" id="email" placeholder="jhondoe@gmail.com" class="input-text">
+                <label for="competencies">Competências (separadas por vírgula)</label>
+                <input type="text" name="competencies" id="competencies" placeholder="TypeScript,HTML,CSS"
+                    class="input-text">
                 <label for="password">Senha</label>
                 <input type="password" name="password" id="password" placeholder="senha" class="input-text">
-                <input type="submit" value="Entrar" class="custom-btn">
+                <input type="submit" value="Cadastrar" class="custom-btn">
             </form>
         </div>
-        <div class="signin-wrapper">
-            <a href="#" class="signin" id="signinLink">Não tem uma conta?</a>
-        </div>
-
     </main>
 
     <footer>
@@ -42,7 +48,7 @@
         <p>Brasil, 2023</p>
     </footer>
 
-    <script src="../scripts/login.js"></script>
+    <script src="../scripts/signin.js"></script>
 </body>
 
 </html>
