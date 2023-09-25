@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/reset.css">
     <link rel="stylesheet" href="../styles/style.css">
     <title>Linketinder</title>
 </head>
@@ -12,8 +13,8 @@
     <header>
         <div class="main-navbar">
             <div class="logo">
-                <h1 class="logo-linkedin">Linke</h1>
-                <h1 class="logo-tinder">Tinder</h1>
+                <h1 id="logoLinkedin">Linke</h1>
+                <h1 id="logoTinder">Tinder</h1>
             </div>
             <div class="menu-navbar">
                 <a href="#" class="navbar-link">Home</a>
@@ -23,12 +24,17 @@
         </div>
     </header>
 
-    <main>
-
+    <main class="main-wrapper">
+        <div class="user-list-wrapper">
+            <ol id="userList"></ol>
+        </div>
     </main>
 
     <footer>
-
+        <p>Desenvolvido por <span class="highlight">Vinícius Vianna</span> para o <span class="highlight">Acelera
+                ZG4</span></p>
+        <br>
+        <p>Brasil, 2023</p>
     </footer>
 
     <script src="../scripts/main.js"></script>
