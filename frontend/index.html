@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/reset.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <title>Linketinder</title>
+</head>
+
+<body>
+    <header>
+        <div class="main-navbar">
+            <div class="logo">
+                <h1 id="logoLinkedin">Linke</h1>
+                <h1 id="logoTinder">Tinder</h1>
+            </div>
+            <div class="menu-navbar">
+                <a href="index.html" class="navbar-link">Home</a>
+                <a href="/templates/signin.html" class="navbar-link">Cadastro</a>
+                <a href="index.html" class="navbar-link" id="logout">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="cards-wrapper">
+            <div class="main-info-card" id="mainInfoCard">
+                <div class="card-title" id="mainInfoTitle">
+                    <h1 id="userFullName"></h1>
+                    <h2 id="userUsername"></h2>
+                </div>
+                <div class="card-description" id="mainInfoBody">
+                    <p id="userEmail"></p>
+                    <p id="userAge"></p>
+                </div>
+            </div>
+            <div class="competencies-card">
+                <h1 class="card-title">Competências</h1>
+                <ul id="userCompetencies"></ul>
+            </div>
+        </div>
+        <div class="user-interest-wrapper">
+            <div class="user-list-wrapper">
+                <ul id="userList"></ul>
+            </div>
+            <div class="competencies-chart-wrapper" id="chartWrapper">
+                <canvas id="competenciesChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Desenvolvido por <span class="highlight">Vinícius Vianna</span> para o <span class="highlight">Acelera
+                ZG4</span></p>
+        <br>
+        <p>Brasil, 2023</p>
+    </footer>
+
+    <script src="../scripts/main.js"></script>
+</body>
+
+</html>

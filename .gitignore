@@ -30,4 +30,7 @@ bin/
 .DS_Store
 
 ### Database ###
-*.json
+src/data/*.json
+
+### Node ###
+frontend/node_modules/
