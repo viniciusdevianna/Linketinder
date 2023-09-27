@@ -43,6 +43,13 @@ que se encontra na pasta `src`.
 Na primeira vez que rodar o projeto, dois scripts gerarão arquivos `json` para candidatos e empresas, que servirão como
 base de dados. Os scripts também geram 5 candidatos e empresas aleatórios pré-cadastrados como foi pedido no enunciado.
 
+Para visualizar um preview do frontend, certifique-se de ter o node e o npm instalados. Depois basta entrar na pasta frontend e seguir os passos no terminal:
+
+`npm install`
+`npm run preview`
+
+Um servidor de desenvolvimento do webpack será levantado na porta 8080. Se for a primeira vez rodando o site (ou se o localstorage estiver zerado) você será redirecionado para a página de Login. Você pode então clicar em "Não tem uma conta?" para fazer o cadastro de um candidato ou empresa novos.
+
 ## :space_invader: Bug fixes
 
 - Nada aqui por enquanto.
@@ -51,6 +58,16 @@ base de dados. Os scripts também geram 5 candidatos e empresas aleatórios pré
 
 ### Back-end
 - Groovy (v4.0.14)
+
+### Front-end
+- HTML
+- CSS
+- JS
+- TypeScript
+
+### Frameworks e bibliotecas
+- Webpack
+- Chart.js
 ***
 
 ## Sobre o Groovy
