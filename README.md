@@ -5,7 +5,7 @@
 
 ***
 
-# :student::fire::office_worker: Linketinder
+# :student::heart_on_fire::office_worker: Linketinder
 
 ## :question: O que é?
 O Linketinder é um aplicativo que conecta **candidatos** em busca de vagas com **empresas** em busca do trabalhador ideal para
@@ -26,7 +26,7 @@ do candidato.
 ---
 
 ## :newspaper: O que está planejado?
-- Fazer cadastro como candidato ou empresa, com a lista de competências ofertadas / desejadas
+- Fazer cadastro como candidato ou empresa, com a lista de competências ofertadas / desejadas :heavy_check_mark:
 - Como empresa: postar vagas
 - Como candidato: ver lista de vagas nos models dos perfis do Tinder
 - Como empresa: ver lista de candidatos nos moldes dos perfis do Tinder
@@ -36,7 +36,19 @@ do candidato.
 
 ## :gear: Como utilizar?
 
-#### :construction: WIP
+Para o projeto da trilha K1-T4, era necessário apenas listar os candidatos e empresas cadastrados e, opcionalmente,
+fazer cadastro de novos usuários. Para tal, basta clonar o repositório, buildar na sua IDE e rodar o arquivo `Main.groovy`
+que se encontra na pasta `src`.
+
+Na primeira vez que rodar o projeto, dois scripts gerarão arquivos `json` para candidatos e empresas, que servirão como
+base de dados. Os scripts também geram 5 candidatos e empresas aleatórios pré-cadastrados como foi pedido no enunciado.
+
+Para visualizar um preview do frontend, certifique-se de ter o node e o npm instalados. Depois basta entrar na pasta frontend e seguir os passos no terminal:
+
+`npm install`
+`npm run preview`
+
+Um servidor de desenvolvimento do webpack será levantado na porta 8080. Se for a primeira vez rodando o site (ou se o localstorage estiver zerado) você será redirecionado para a página de Login. Você pode então clicar em "Não tem uma conta?" para fazer o cadastro de um candidato ou empresa novos.
 
 ## :space_invader: Bug fixes
 
@@ -46,6 +58,16 @@ do candidato.
 
 ### Back-end
 - Groovy (v4.0.14)
+
+### Front-end
+- HTML
+- CSS
+- JS
+- TypeScript
+
+### Frameworks e bibliotecas
+- Webpack
+- Chart.js
 ***
 
 ## Sobre o Groovy

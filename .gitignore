@@ -28,3 +28,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Database ###
+src/data/*.json
+
+### Node ###
+frontend/node_modules/
