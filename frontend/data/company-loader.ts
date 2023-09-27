@@ -14,9 +14,9 @@ export default function loadCompanies(): Company[] {
 
     for (let i = 0; i < 5; i++) {
         let company = new Company({
-            id: i,
-            name: `Candidato ${i}`,
-            email: `candidato${i}@gmail.com`,
+            id: i + 6,
+            name: `Empresa ${i + 6}`,
+            email: `empresa${i + 6}@gmail.com`,
             competencies: ["TypeScript", "Java", "Groovy"],
         })
         pre_load.push(company)

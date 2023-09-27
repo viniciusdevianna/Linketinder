@@ -14,9 +14,9 @@ export default function loadCandidates(): Candidate[] {
 
     for (let i = 0; i < 5; i++) {
         let candidate = new Candidate({
-            id: i,
-            name: `Candidato ${i}`,
-            email: `candidato${i}@gmail.com`,
+            id: i + 1,
+            name: `Candidato ${i + 1}`,
+            email: `candidato${i + 1}@gmail.com`,
             competencies: ["TypeScript", "Java", "Groovy"],
             age: 20 + i
         })
