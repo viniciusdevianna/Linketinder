@@ -30,21 +30,34 @@
         <div class="login-wrapper">
             <form action="" method="get" class="login-form" id="signinForm">
                 <label for="username">Login</label>
-                <input type="text" name="username" id="username" placeholder="jhondoe" class="input-text">
+                <input type="text" name="username" id="username" placeholder="jhondoe" class="input-text regex-control">
                 <label for="name">Nome</label>
-                <input type="text" name="name" id="name" placeholder="Jhon Doe" class="input-text">
+                <input type="text" name="name" id="name" placeholder="Jhon Doe" class="input-text regex-control">
                 <label for="email">E-mail</label>
-                <input type="email" name="email" id="email" placeholder="jhondoe@gmail.com" class="input-text">
+                <input type="email" name="email" id="email" placeholder="jhondoe@gmail.com"
+                    class="input-text regex-control">
                 <label for="competencies">Competências (separadas por vírgula)</label>
                 <input type="text" name="competencies" id="competencies" placeholder="TypeScript,HTML,CSS"
-                    class="input-text">
+                    class="input-text regex-control">
                 <label for="password">Senha</label>
-                <input type="password" name="password" id="password" placeholder="senha" class="input-text">
-                <div id="ageInfo" class="specific-info">
+                <input type="password" name="password" id="password" placeholder="senha"
+                    class="input-text regex-control">
+                <div id="candidateInfo" class="candidate-specific-info">
                     <label for="age">Idade</label>
                     <input type="number" name="age" id="age" placeholder="18" class="input-text">
+                    <label for="cpf">CPF</label>
+                    <input type="text" name="cpf" id="cpf" placeholder="XXX.XXX.XXX-XX"
+                        class="input-text regex-control">
+                    <label for="tel">Telefone</label>
+                    <input type="text" name="tel" id="tel" placeholder="XX XXXXX XXXX" class="input-text regex-control">
+                    <label for="linkedin">Linkedin</label>
+                    <input type="text" name="linkedin" id="linkedin" placeholder="linkedin.com/in/jhon-doe/"
+                        class="input-text regex-control">
+                    <label for="github">GitHub</label>
+                    <input type="text" name="github" id="github" placeholder="github.com/jhondoe"
+                        class="input-text regex-control">
                 </div>
-                <input type="submit" value="Cadastrar" class="custom-btn">
+                <input type="submit" value="Cadastrar" class="custom-btn" id="submitBtn">
             </form>
         </div>
     </main>

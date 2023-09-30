@@ -3,82 +3,148 @@ import Company from "../models/Company"
 import User from "../models/User"
 import loadCandidates from "../data/candidate-loader"
 import loadCompanies from "../data/company-loader"
+import Cleave from "cleave.js"
+import 'cleave.js/dist/addons/cleave-phone.BR'
 
-const form = document.getElementById("signinForm")
+const form = document.getElementById("signinForm") as HTMLFormElement
 const candidateTrigger = document.getElementById("candidateBtn")! as HTMLButtonElement
 const companyTrigger = document.getElementById("companyBtn")! as HTMLButtonElement
+const cpfInput = (document.getElementById("cpf") as HTMLInputElement)
+const telInput = (document.getElementById("tel") as HTMLInputElement)
+
+const regexFields = document.getElementsByClassName("regex-control")
+
+new Cleave(telInput, {
+    phone: true,
+    phoneRegionCode: 'BR'
+})
+
+new Cleave(cpfInput, {
+    blocks: [3, 3, 3, 2],
+    delimiters: [".", ".", "-"]
+})
+
+const usernameRegex = /^\S+$/
+const nameRegex = /^([À-úA-Za-z]+\s?)+$/
+const emailRegex = /^[\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,4}$/
+const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%!^&*])\S{8,50}$/
+const competenciesRegex = /^(\S+)$|^(\S+,?)+$/
+const cpfRegex = /^(\d{3}\.){2}\d{3}-\d{2}$/
+const telRegex = /^\d{2} \d{5} \d{4}$/
+const linkedinRegex = /^linkedin\.com\/in\/[\w-]+\/$/
+const githubRegex = /^github\.com\/[\w-]+$/
+
+const regexes = [usernameRegex, nameRegex, emailRegex, competenciesRegex, passwordRegex, cpfRegex, telRegex, linkedinRegex, githubRegex]
+
+let fieldRegexTable: { [key: string]: RegExp } = {}
+
+for (let i = 0; i < regexFields.length; i++) {
+    let element = regexFields[i] as HTMLInputElement
+    fieldRegexTable[element.name] = regexes[i]
+}
 
 let typeOfUser = "Candidate"
 
-candidateTrigger.onclick = (event) => {
-    const ageInfo = document.getElementById("ageInfo")
-    if (ageInfo) {
-        ageInfo.style.display = "flex"
+const okBorder = "2px solid green"
+const notOkBorder = "2px solid red"
+
+const fieldCheck = (
+    regex: RegExp,
+    field: HTMLInputElement,
+    isOk: (test: boolean, field?: HTMLInputElement) => boolean | void
+) => isOk(regex.test(field.value), field)
+
+const colorBorder = (regex: RegExp, field: HTMLInputElement) => {
+    fieldCheck(regex, field, function (test, field) {
+        if (field) {
+            if (test) {
+                field.style.border = okBorder
+            } else {
+                field.style.border = notOkBorder
+            }
+        }
+    })
+}
+
+const canSubmitField = (regex: RegExp, field: HTMLInputElement) => {
+    return fieldCheck(regex, field, (test) => test)
+}
+
+candidateTrigger.onclick = (e) => {
+    const candidateInfo = document.getElementById("candidateInfo")
+    if (candidateInfo) {
         candidateTrigger.disabled = true
         companyTrigger.disabled = false
         typeOfUser = candidateTrigger.value
+        candidateInfo.style.display = "flex"
     }
 }
 
-companyTrigger.onclick = (event) => {
-    const ageInfo = document.getElementById("ageInfo")
-    if (ageInfo) {
-        ageInfo.style.display = "none"
+companyTrigger.onclick = (e) => {
+    const candidateInfo = document.getElementById("candidateInfo")
+    if (candidateInfo) {
         candidateTrigger.disabled = false
         companyTrigger.disabled = true
         typeOfUser = companyTrigger.value
+        candidateInfo.style.display = "none"
     }
+}
+
+for (let element of regexFields) {
+    let field = element as HTMLInputElement
+    field.onkeyup = (e) => colorBorder(fieldRegexTable[field.name], field)
 }
 
 if (form) {
     form.addEventListener("submit", function (event) {
         event.preventDefault()
-        let username = (document.getElementById("username") as HTMLInputElement).value
-        let password = (document.getElementById("password") as HTMLInputElement).value
-        let name = (document.getElementById("name") as HTMLInputElement).value
-        let email = (document.getElementById("email") as HTMLInputElement).value
-        let competencies = (document.getElementById("competencies") as HTMLInputElement).value
+        let isFormOk = Array.from(regexFields).every((element) => {
+            let field = element as HTMLInputElement
+            return canSubmitField(fieldRegexTable[field.name], field)
+        })
 
-        competencies = competencies.replace(/\s\g/, "")
-        let listOfCompetencies: string[] = competencies.split(",")
-        let userList: User[] = []
-
-        if (typeOfUser === "Candidate") {
-            let age = Number((document.getElementById("age") as HTMLInputElement).value)
-            userList = loadCandidates()
-
-            let candidate = new Candidate({
-                id: userList.length,
-                username: username,
-                password: password,
-                name: name,
-                email: email,
-                competencies: listOfCompetencies,
-                age: age
-            })
-
-            userList.push(candidate)
-            localStorage.setItem("candidates", JSON.stringify(userList))
-            localStorage.setItem("user", JSON.stringify(candidate))
+        if (!isFormOk) {
+            alert("Um ou mais campos estão incorretos")
         } else {
-            userList = loadCompanies()
+            let data = new FormData(form)
+            let listOfCompetencies: string[] = (regexFields[4] as HTMLInputElement).value.split(",")
+            let userList: User[] = []
 
-            let company = new Company({
-                id: userList.length,
-                username: username,
-                password: password,
-                name: name,
-                email: email,
-                competencies: listOfCompetencies
-            })
+            if (typeOfUser === "Candidate") {
+                userList = loadCandidates()
 
-            userList.push(company)
-            localStorage.setItem("companies", JSON.stringify(userList))
-            localStorage.setItem("user", JSON.stringify(company))
+                let candidate = new Candidate({
+                    id: userList.length,
+                    username: data.get("username") as string,
+                    password: data.get("password") as string,
+                    name: data.get("name") as string,
+                    email: data.get("email") as string,
+                    competencies: listOfCompetencies,
+                    age: data.get("age") as unknown as number
+                })
+
+                userList.push(candidate)
+                localStorage.setItem("candidates", JSON.stringify(userList))
+                localStorage.setItem("user", JSON.stringify(candidate))
+            } else {
+                userList = loadCompanies()
+
+                let company = new Company({
+                    id: userList.length,
+                    username: data.get("username") as string,
+                    password: data.get("password") as string,
+                    name: data.get("name") as string,
+                    email: data.get("email") as string,
+                    competencies: listOfCompetencies
+                })
+
+                userList.push(company)
+                localStorage.setItem("companies", JSON.stringify(userList))
+                localStorage.setItem("user", JSON.stringify(company))
+            }
+
+
+            window.location.href = "http://localhost:8080/"
         }
-
-
-        window.location.href = "http://localhost:8080/"
-
     })
 }
