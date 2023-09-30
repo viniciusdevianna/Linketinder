@@ -56,7 +56,7 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
   \***************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst User_1 = __importDefault(__webpack_require__(/*! ./User */ \"./models/User.ts\"));\nclass Company extends User_1.default {\n}\nexports[\"default\"] = Company;\n\n\n//# sourceURL=webpack://frontend/./models/Company.ts?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst User_1 = __importDefault(__webpack_require__(/*! ./User */ \"./models/User.ts\"));\nclass Company extends User_1.default {\n    constructor({ id = 0, username = \"default\", password = \"default\", name = \"default\", email = \"default@gmail.com\", competencies = [\"\"], cnpj = \"\", cep = \"\", site = \"\" } = {}) {\n        super({ id, username, password, name, email, competencies });\n        this.cnpj = cnpj;\n        this.cep = cep;\n        this.site = site;\n    }\n}\nexports[\"default\"] = Company;\n\n\n//# sourceURL=webpack://frontend/./models/Company.ts?");
 
 /***/ }),
 

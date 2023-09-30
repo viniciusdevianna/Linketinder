@@ -232,6 +232,11 @@ footer {
     flex-direction: column;
 }
 
+.company-specific-info {
+    display: none;
+    flex-direction: column;
+}
+
 #logoLinkedin {
     color: var(--color-primary);
 }

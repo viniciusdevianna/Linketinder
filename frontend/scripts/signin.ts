@@ -9,8 +9,12 @@ import 'cleave.js/dist/addons/cleave-phone.BR'
 const form = document.getElementById("signinForm") as HTMLFormElement
 const candidateTrigger = document.getElementById("candidateBtn")! as HTMLButtonElement
 const companyTrigger = document.getElementById("companyBtn")! as HTMLButtonElement
+const candidateInfo = document.getElementById("candidateInfo")
+const companyInfo = document.getElementById("companyInfo")
 const cpfInput = (document.getElementById("cpf") as HTMLInputElement)
 const telInput = (document.getElementById("tel") as HTMLInputElement)
+const cnpjInput = (document.getElementById("cnpj") as HTMLInputElement)
+const cepInput = (document.getElementById("cep") as HTMLInputElement)
 
 const regexFields = document.getElementsByClassName("regex-control")
 
@@ -24,6 +28,16 @@ new Cleave(cpfInput, {
     delimiters: [".", ".", "-"]
 })
 
+new Cleave(cnpjInput, {
+    blocks: [2, 3, 3, 4, 2],
+    delimiters: [".", ".", "/", "-"]
+})
+
+new Cleave(cepInput, {
+    blocks: [2, 3, 3],
+    delimiters: [".", "-"]
+})
+
 const usernameRegex = /^\S+$/
 const nameRegex = /^([À-úA-Za-z]+\s?)+$/
 const emailRegex = /^[\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,4}$/
@@ -33,8 +47,23 @@ const cpfRegex = /^(\d{3}\.){2}\d{3}-\d{2}$/
 const telRegex = /^\d{2} \d{5} \d{4}$/
 const linkedinRegex = /^linkedin\.com\/in\/[\w-]+\/$/
 const githubRegex = /^github\.com\/[\w-]+$/
+const cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/
+const cepRegex = /^\d{2}\.\d{3}-\d{3}$/
+const siteRegex = /^(https:\/\/www\.|http:\/\/www\.|www\.|https:\/\/|http:\/\/)?(?!www\.[a-zA-Z]*)([a-zA-Z]{2,})(\.[a-zA-Z]{2,})+([a-zA-Z]{2,})?(\/[a-zA-Z0-9]*)*$/
 
-const regexes = [usernameRegex, nameRegex, emailRegex, competenciesRegex, passwordRegex, cpfRegex, telRegex, linkedinRegex, githubRegex]
+const regexes = [usernameRegex,
+    nameRegex,
+    emailRegex,
+    competenciesRegex,
+    passwordRegex,
+    cpfRegex,
+    telRegex,
+    linkedinRegex,
+    githubRegex,
+    cnpjRegex,
+    cepRegex,
+    siteRegex
+]
 
 let fieldRegexTable: { [key: string]: RegExp } = {}
 
@@ -71,22 +100,22 @@ const canSubmitField = (regex: RegExp, field: HTMLInputElement) => {
 }
 
 candidateTrigger.onclick = (e) => {
-    const candidateInfo = document.getElementById("candidateInfo")
-    if (candidateInfo) {
+    if (candidateInfo && companyInfo) {
         candidateTrigger.disabled = true
         companyTrigger.disabled = false
         typeOfUser = candidateTrigger.value
         candidateInfo.style.display = "flex"
+        companyInfo.style.display = "none"
     }
 }
 
 companyTrigger.onclick = (e) => {
-    const candidateInfo = document.getElementById("candidateInfo")
-    if (candidateInfo) {
+    if (candidateInfo && companyInfo) {
         candidateTrigger.disabled = false
         companyTrigger.disabled = true
         typeOfUser = companyTrigger.value
         candidateInfo.style.display = "none"
+        companyInfo.style.display = "flex"
     }
 }
 
@@ -107,7 +136,7 @@ if (form) {
             alert("Um ou mais campos estão incorretos")
         } else {
             let data = new FormData(form)
-            let listOfCompetencies: string[] = (regexFields[4] as HTMLInputElement).value.split(",")
+            let listOfCompetencies: string[] = (regexFields[3] as HTMLInputElement).value.split(",")
             let userList: User[] = []
 
             if (typeOfUser === "Candidate") {
@@ -120,8 +149,14 @@ if (form) {
                     name: data.get("name") as string,
                     email: data.get("email") as string,
                     competencies: listOfCompetencies,
-                    age: data.get("age") as unknown as number
+                    age: data.get("age") as unknown as number,
+                    cpf: data.get("tel") as string,
+                    tel: data.get("tel") as string,
+                    linkedin: data.get("linkedin") as string,
+                    github: data.get("github") as string
                 })
+
+                console.log(candidate)
 
                 userList.push(candidate)
                 localStorage.setItem("candidates", JSON.stringify(userList))
@@ -135,7 +170,10 @@ if (form) {
                     password: data.get("password") as string,
                     name: data.get("name") as string,
                     email: data.get("email") as string,
-                    competencies: listOfCompetencies
+                    competencies: listOfCompetencies,
+                    cnpj: data.get("cnpj") as string,
+                    cep: data.get("cep") as string,
+                    site: data.get("site") as string
                 })
 
                 userList.push(company)
