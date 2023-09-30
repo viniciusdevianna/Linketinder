@@ -16,7 +16,12 @@ const telInput = (document.getElementById("tel") as HTMLInputElement)
 const cnpjInput = (document.getElementById("cnpj") as HTMLInputElement)
 const cepInput = (document.getElementById("cep") as HTMLInputElement)
 
-const regexFields = document.getElementsByClassName("regex-control")
+const regexFieldsCandidate = document.getElementsByClassName("regex-control-candidate")
+const regexFieldsCompany = document.getElementsByClassName("regex-control-company")
+const regexFieldsGeneral = document.getElementsByClassName("regex-control")
+const validationMessages = document.getElementsByClassName("validation-message")
+
+const regexFields = [...regexFieldsGeneral, ...regexFieldsCandidate, ...regexFieldsCompany]
 
 new Cleave(telInput, {
     phone: true,
@@ -66,10 +71,13 @@ const regexes = [usernameRegex,
 ]
 
 let fieldRegexTable: { [key: string]: RegExp } = {}
+let validationMsgTable: { [key: string]: HTMLParagraphElement } = {}
 
 for (let i = 0; i < regexFields.length; i++) {
     let element = regexFields[i] as HTMLInputElement
+    let message = validationMessages[i] as HTMLParagraphElement
     fieldRegexTable[element.name] = regexes[i]
+    validationMsgTable[element.name] = message
 }
 
 let typeOfUser = "Candidate"
@@ -80,17 +88,25 @@ const notOkBorder = "2px solid red"
 const fieldCheck = (
     regex: RegExp,
     field: HTMLInputElement,
-    isOk: (test: boolean, field?: HTMLInputElement) => boolean | void
+    isOk: (test: boolean, field: HTMLInputElement) => boolean | void
 ) => isOk(regex.test(field.value), field)
 
 const colorBorder = (regex: RegExp, field: HTMLInputElement) => {
     fieldCheck(regex, field, function (test, field) {
-        if (field) {
-            if (test) {
-                field.style.border = okBorder
-            } else {
-                field.style.border = notOkBorder
-            }
+        if (test) {
+            field.style.border = okBorder
+        } else {
+            field.style.border = notOkBorder
+        }
+    })
+}
+
+const showMessage = (regex: RegExp, field: HTMLInputElement) => {
+    fieldCheck(regex, field, function (test, field) {
+        if (test) {
+            validationMsgTable[field.name].style.display = "none"
+        } else {
+            validationMsgTable[field.name].style.display = "flex"
         }
     })
 }
@@ -122,24 +138,29 @@ companyTrigger.onclick = (e) => {
 for (let element of regexFields) {
     let field = element as HTMLInputElement
     field.onkeyup = (e) => colorBorder(fieldRegexTable[field.name], field)
+    field.onblur = (e) => showMessage(fieldRegexTable[field.name], field)
 }
 
 if (form) {
     form.addEventListener("submit", function (event) {
         event.preventDefault()
-        let isFormOk = Array.from(regexFields).every((element) => {
-            let field = element as HTMLInputElement
-            return canSubmitField(fieldRegexTable[field.name], field)
-        })
 
-        if (!isFormOk) {
-            alert("Um ou mais campos estão incorretos")
-        } else {
-            let data = new FormData(form)
-            let listOfCompetencies: string[] = (regexFields[3] as HTMLInputElement).value.split(",")
-            let userList: User[] = []
+        if (typeOfUser === "Candidate") {
+            let isFormOk = Array.from(regexFieldsCandidate).every((element) => {
+                let field = element as HTMLInputElement
+                return canSubmitField(fieldRegexTable[field.name], field)
+            }) && Array.from(regexFieldsGeneral).every((element) => {
+                let field = element as HTMLInputElement
+                return canSubmitField(fieldRegexTable[field.name], field)
+            })
 
-            if (typeOfUser === "Candidate") {
+            if (!isFormOk) {
+                alert("Um ou mais campos estão incorretos")
+            } else {
+                let data = new FormData(form)
+                let listOfCompetencies: string[] = (regexFields[3] as HTMLInputElement).value.split(",")
+                let userList: User[] = []
+
                 userList = loadCandidates()
 
                 let candidate = new Candidate({
@@ -156,12 +177,27 @@ if (form) {
                     github: data.get("github") as string
                 })
 
-                console.log(candidate)
-
                 userList.push(candidate)
                 localStorage.setItem("candidates", JSON.stringify(userList))
                 localStorage.setItem("user", JSON.stringify(candidate))
+                window.location.href = "http://localhost:8080/"
+            }
+        } else {
+            let isFormOk = Array.from(regexFieldsCompany).every((element) => {
+                let field = element as HTMLInputElement
+                return canSubmitField(fieldRegexTable[field.name], field)
+            }) && Array.from(regexFieldsGeneral).every((element) => {
+                let field = element as HTMLInputElement
+                return canSubmitField(fieldRegexTable[field.name], field)
+            })
+
+            if (!isFormOk) {
+                alert("Um ou mais campos estão incorretos")
             } else {
+                let data = new FormData(form)
+                let listOfCompetencies: string[] = (regexFields[3] as HTMLInputElement).value.split(",")
+                let userList: User[] = []
+
                 userList = loadCompanies()
 
                 let company = new Company({
@@ -179,10 +215,8 @@ if (form) {
                 userList.push(company)
                 localStorage.setItem("companies", JSON.stringify(userList))
                 localStorage.setItem("user", JSON.stringify(company))
+                window.location.href = "http://localhost:8080/"
             }
-
-
-            window.location.href = "http://localhost:8080/"
         }
     })
 }

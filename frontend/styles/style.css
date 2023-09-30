@@ -170,7 +170,7 @@ footer {
     border: 1px solid;
     border-color: var(--color-primary);
     padding: .5rem;
-    margin: 1rem 1rem;
+    margin: 10px 10px;
     background-color: var(--color-light);
     /* box-shadow: -1px 2px #000000; */
 }
@@ -223,8 +223,20 @@ footer {
     align-items: center;
     background-color: var(--box-background);
     border-radius: 10px;
-    width: 50%;
+    width: fit-content;
     margin: 1rem;
+    padding: 1rem;
+}
+
+.input-fields {
+    display: flex;
+    flex-direction: row;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    margin: 1px 5px 10px 5px;
 }
 
 .candidate-specific-info {
@@ -235,6 +247,13 @@ footer {
 .company-specific-info {
     display: none;
     flex-direction: column;
+}
+
+.validation-message {
+    color: red;
+    font-size: small;
+    font-weight: light;
+    display: none;
 }
 
 #logoLinkedin {
