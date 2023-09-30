@@ -29,22 +29,97 @@
         </div>
         <div class="login-wrapper">
             <form action="" method="get" class="login-form" id="signinForm">
-                <label for="username">Login</label>
-                <input type="text" name="username" id="username" placeholder="jhondoe" class="input-text">
-                <label for="name">Nome</label>
-                <input type="text" name="name" id="name" placeholder="Jhon Doe" class="input-text">
-                <label for="email">E-mail</label>
-                <input type="email" name="email" id="email" placeholder="jhondoe@gmail.com" class="input-text">
-                <label for="competencies">Competências (separadas por vírgula)</label>
-                <input type="text" name="competencies" id="competencies" placeholder="TypeScript,HTML,CSS"
-                    class="input-text">
-                <label for="password">Senha</label>
-                <input type="password" name="password" id="password" placeholder="senha" class="input-text">
-                <div id="ageInfo" class="specific-info">
-                    <label for="age">Idade</label>
-                    <input type="number" name="age" id="age" placeholder="18" class="input-text">
+                <div class="input-fields">
+                    <div class="general-info">
+                        <div class="form-field">
+                            <label for="username">Login</label>
+                            <input type="text" name="username" id="username" placeholder="jhondoe"
+                                class="input-text regex-control">
+                            <h4 class="validation-message">O nome de usuário não pode conter espaços</h4>
+                        </div>
+                        <div class="form-field">
+                            <label for="name">Nome</label>
+                            <input type="text" name="name" id="name" placeholder="Jhon Doe"
+                                class="input-text regex-control">
+                            <span class="validation-message">Seu nome não pode conter números ou caracteres
+                                especiais</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="email">E-mail</label>
+                            <input type="email" name="email" id="email" placeholder="jhondoe@gmail.com"
+                                class="input-text regex-control">
+                            <span class="validation-message">O e-mail não é um endereço válido</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="competencies">Competências (separadas por vírgula)</label>
+                            <input type="text" name="competencies" id="competencies" placeholder="TypeScript,HTML,CSS"
+                                class="input-text regex-control">
+                            <span class="validation-message">Separe as competências por vírgula, sem espaço</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="password">Senha</label>
+                            <input type="password" name="password" id="password" placeholder="senha"
+                                class="input-text regex-control">
+                            <span class="validation-message">
+                                Sua senha deve conter no mínimo 8 dígitos e, pelo menos:<br>
+                                - uma letra maiúscula<br>
+                                - um número<br>
+                                - um caracter dentre @ # $ % ! ^ & *
+                            </span>
+                        </div>
+                    </div>
+                    <div id="candidateInfo" class="candidate-specific-info">
+                        <div class="form-field">
+                            <label for="age">Idade</label>
+                            <input type="number" name="age" id="age" placeholder="18" class="input-text">
+                        </div>
+                        <div class="form-field">
+                            <label for="cpf">CPF</label>
+                            <input type="text" name="cpf" id="cpf" placeholder="XXX.XXX.XXX-XX"
+                                class="input-text regex-control-candidate">
+                            <span class="validation-message">O formato do CPF deve ser XXX.XXX.XXX-XX</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="tel">Telefone</label>
+                            <input type="text" name="tel" id="tel" placeholder="XX XXXXX XXXX"
+                                class="input-text regex-control-candidate">
+                            <span class="validation-message">O formato do telefone não é válido</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="linkedin">Linkedin</label>
+                            <input type="text" name="linkedin" id="linkedin" placeholder="linkedin.com/in/jhon-doe/"
+                                class="input-text regex-control-candidate">
+                            <span class="validation-message">O link não é válido</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="github">GitHub</label>
+                            <input type="text" name="github" id="github" placeholder="github.com/jhondoe"
+                                class="input-text regex-control-candidate">
+                            <span class="validation-message">O link não é válido</span>
+                        </div>
+                    </div>
+                    <div class="company-specific-info" id="companyInfo">
+                        <div class="form-field">
+                            <label for="cnpj">CNPJ</label>
+                            <input type="text" name="cnpj" id="cnpj" placeholder="XX.XXX.XXX/XXXX-XX"
+                                class="input-text regex-control-company">
+                            <span class="validation-message">O formato do CNPJ deve ser XX.XXX.XXX/XXXX-XX</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="cep">CEP</label>
+                            <input type="text" name="cep" id="cep" placeholder="XX.XXX-XX"
+                                class="input-text regex-control-company">
+                            <span class="validation-message">O formato do CEP deve ser XX.XXX-XX</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="site">Site</label>
+                            <input type="text" name="site" id="site" placeholder="www.mycompany.com.br"
+                                class="input-text regex-control-company">
+                            <span class="validation-message">URL inválida</span>
+                        </div>
+                    </div>
                 </div>
-                <input type="submit" value="Cadastrar" class="custom-btn">
+                <input type="submit" value="Cadastrar" class="custom-btn" id="submitBtn">
             </form>
         </div>
     </main>
