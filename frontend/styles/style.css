@@ -1,5 +1,6 @@
 :root {
     --color-primary: rgb(1, 108, 221);
+    --color-primary-neon: rgb(104, 202, 255);
     --color-secondary: rgb(249, 78, 126);
     --color-light: rgb(255, 255, 255);
     --color-dark: rgb(36, 36, 36);
@@ -11,7 +12,7 @@
 footer {
     height: 5rem;
     width: auto;
-    background-color: var(--color-primary);
+    background-image: linear-gradient(to right bottom, var(--color-primary) 40%, var(--color-dark));
     font-weight: bold;
     color: whitesmoke;
     display: flex;
@@ -23,7 +24,7 @@ footer {
 .main-navbar {
     height: 5rem;
     width: auto;
-    background-image: linear-gradient(to right bottom, var(--color-light) 50%, var(--color-secondary));
+    background-image: linear-gradient(to right bottom, var(--color-dark) 50%, var(--color-secondary));
     font-weight: bold;
     color: whitesmoke;
     display: flex;
@@ -51,7 +52,7 @@ footer {
 
 .navbar-link {
     text-decoration: none;
-    color: rgba(0, 0, 0, 0.8);
+    color: rgba(255, 255, 255, 0.8);
     transition: color 150ms ease;
     padding: 0 1rem;
     display: flex;
@@ -63,7 +64,7 @@ footer {
 }
 
 .navbar-link:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-neon);
 }
 
 .cards-wrapper {
@@ -71,7 +72,6 @@ footer {
     justify-content: center;
     padding: 2rem;
     align-items: flex-start;
-    /* background-image: url("../assets/img/background-todo.jpg"); */
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -84,7 +84,7 @@ footer {
     justify-content: flex-start;
     padding: 2rem;
     align-items: center;
-    /* background-image: url("../assets/img/background-todo.jpg"); */
+    background-color: rgba(255, 255, 255, 0.8);
     background-repeat: no-repeat;
     background-size: cover;
     opacity: 80%;
