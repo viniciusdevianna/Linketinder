@@ -131,7 +131,6 @@ function getCompetenciesData(): { [key: string]: number } {
         })
     })
 
-    console.log(data)
     return data
 }
 
