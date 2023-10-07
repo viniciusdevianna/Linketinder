@@ -36,6 +36,8 @@ do candidato.
 
 ## :gear: Como utilizar?
 
+### Back-end
+
 Para o projeto da trilha K1-T4, era necessário apenas listar os candidatos e empresas cadastrados e, opcionalmente,
 fazer cadastro de novos usuários. Para tal, basta clonar o repositório, buildar na sua IDE e rodar o arquivo `Main.groovy`
 que se encontra na pasta `src`.
@@ -43,12 +45,25 @@ que se encontra na pasta `src`.
 Na primeira vez que rodar o projeto, dois scripts gerarão arquivos `json` para candidatos e empresas, que servirão como
 base de dados. Os scripts também geram 5 candidatos e empresas aleatórios pré-cadastrados como foi pedido no enunciado.
 
+### Front-end
+
 Para visualizar um preview do frontend, certifique-se de ter o node e o npm instalados. Depois basta entrar na pasta frontend e seguir os passos no terminal:
 
-`npm install`
-`npm run preview`
+```bash
+npm install
+npm run preview
+```
 
 Um servidor de desenvolvimento do webpack será levantado na porta 8080. Se for a primeira vez rodando o site (ou se o localstorage estiver zerado) você será redirecionado para a página de Login. Você pode então clicar em "Não tem uma conta?" para fazer o cadastro de um candidato ou empresa novos.
+
+### Banco de Dados
+
+Ainda não há integração entre o banco de dados e a aplicação em si, mas você pode observar o Diagrama Entidade-Relacionamento aqui:
+
+![Diagrama Entidade-Relacional Linketinder versão 1](Linketinder.png "DER Linketinder")
+
+E gerar o banco de dados inicial, com cinco inserts de usuários e empresas, além de algumas vagas, likes e um match. O arquivo `Linketinder.sql` se encontra na pasta raiz do projeto e está adequado para o Postgresql (testado na versão 16). Se você usa uma interface gráfica de gerenciamento de database, basta rodar o script na sua ferramenta. Caso use o Postgresql no terminal via psql, tente rodar `psql -d linketinder < Linketinder.sql` com a database *linketinder* já criada. No Linux pode ser necessário configurar o usuário padrão, mas se você usa psql você, provavelmente, já sabe disso :smile:.
+
 
 ## :space_invader: Bug fixes
 
@@ -68,6 +83,12 @@ Um servidor de desenvolvimento do webpack será levantado na porta 8080. Se for 
 ### Frameworks e bibliotecas
 - Webpack
 - Chart.js
+
+### Banco de Ddados
+- Postgresql
+- dbdiagram.io
+
+O DER e toda a modelagem do banco de dados foi feita no [dbdiagram.io](https://dbdiagram.io/home). Se você não conhece, vale a pena dar uma olhada. A ferramenta permite criar as entidades e as relações entre elas a partir de objetos semelhantes a um JSON, além de exportar o resultado em forma de imagem e script sql.
 ***
 
 ## Sobre o Groovy
