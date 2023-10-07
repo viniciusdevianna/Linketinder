@@ -7,6 +7,12 @@ import model.User
 import model.util.Address
 import model.util.CNPJ
 import model.util.CPF
+import model.util.Competency
+
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class MenuView {
     private final scanner
@@ -68,26 +74,32 @@ class MenuView {
             switch (newUserOption) {
                 case 1:
                     print "CPF: "
-                    CPF newUserCPF = new CPF(
-                        number: scanner.nextLine()
-                    )
+//                    CPF newUserCPF = new CPF(
+//                        number: scanner.nextLine()
+//                    )
+                    String newUserCPF = scanner.nextLine()
                     print "Idade: "
                     Integer newUserAge = scanner.nextInt()
                     scanner.nextLine()
-                    println "Insira sua formação, separando cada item por vírgula"
-                    List newUserEducation = scanner.nextLine().split(",")
-                    println "Insira seus idiomas, separando cada item por vírgula"
-                    List newUserLanguages = scanner.nextLine().split(",")
+                    println "Insira suas competências, separando cada item por vírgula"
+                    List newUserCompetencies = []
+                    List newUserCompNames = scanner.nextLine().split(",")
+                    newUserCompNames.forEach { language ->
+                        Competency newComp = new Competency(language: language)
+                        newUserCompetencies.add(newComp)
+                    }
+                    print "Data de nascimento: "
+                    DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                    LocalDate newUserBirthdate = LocalDate.parse(scanner.nextLine() as String, format)
                     Candidate newCandidate = new Candidate(
                             name: newUser.name,
                             email: newUser.email,
                             description: newUser.description,
                             address: newUserAddress,
-                            competencies: newUser.competencies,
+                            competencies: newUserCompetencies,
                             cpf: newUserCPF,
                             age: newUserAge,
-                            education: newUserEducation,
-                            languages: newUserLanguages
+                            birthdate: newUserBirthdate
                     )
                     this.candidateControl.saveUser(newCandidate)
                     break
@@ -120,6 +132,10 @@ class MenuView {
         String newUserCountry = scanner.nextLine()
         print "Estado: "
         String newUserState = scanner.nextLine()
+        print "Cidade: "
+        String newUserCity = scanner.nextLine()
+        print "Bairro: "
+        String newUserDistrict = scanner.nextLine()
         print "Insira seu CEP apenas com números: "
         String newUserCep = scanner.nextLine()
         print "Rua: "
@@ -135,7 +151,9 @@ class MenuView {
                 cep: newUserCep,
                 street: newUserStreet,
                 number: newUserNumber,
-                complement: newUserComplement
+                complement: newUserComplement,
+                city: newUserCity,
+                district: newUserDistrict
         )
     }
 
@@ -146,13 +164,11 @@ class MenuView {
         String newUserEmail = scanner.nextLine()
         println "Insira uma breve descrição sobre você"
         String newUserDescription = scanner.nextLine()
-        println "Insira suas competências, separando cada item por vírgula"
-        List newUserCompetencies = scanner.nextLine().split(",")
+
         return new User(
                 name: newUserName,
                 email: newUserEmail,
-                description: newUserDescription,
-                competencies: newUserCompetencies
+                description: newUserDescription
         )
     }
 }
