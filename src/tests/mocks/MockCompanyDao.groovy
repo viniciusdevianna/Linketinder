@@ -7,7 +7,7 @@ import model.User
 class MockCompanyDao implements UserDaoInterface{
     private List<Company> companiesArray = new ArrayList<>()
 
-    List<Company> read() {
+    List<Company> getAll() {
         return companiesArray
     }
 

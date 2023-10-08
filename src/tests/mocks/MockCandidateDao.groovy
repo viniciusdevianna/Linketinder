@@ -7,7 +7,7 @@ import model.User
 class MockCandidateDao implements UserDaoInterface{
     private List<Candidate> candidatesArray = new ArrayList<>()
 
-    List<Candidate> read() {
+    List<Candidate> getAll() {
         return candidatesArray
     }
 

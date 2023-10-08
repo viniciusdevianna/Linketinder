@@ -1,7 +1,6 @@
 package control
 
 import data.UserDaoInterface
-import model.Company
 import model.User
 
 class UserController {
@@ -12,7 +11,7 @@ class UserController {
     }
 
     def getAllUsers() {
-        return userDao.read()
+        return userDao.getAll()
     }
 
     def saveUser(User newUser) {

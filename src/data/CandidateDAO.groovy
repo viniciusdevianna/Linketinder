@@ -13,7 +13,7 @@ class CandidateDAO implements UserDaoInterface{
         this.competencyDAO = competencyDAO
     }
 
-    List<Candidate> read() {
+    List<Candidate> getAll() {
         List<Candidate> allCandidates = []
         try {
             DatabaseConnector.executeInstance {
@@ -22,6 +22,7 @@ class CandidateDAO implements UserDaoInterface{
                                   a.cpf,
                                   DATE_PART('YEAR',age(a.birthdate)) as age,
                                   b.id_user,
+                                  b.password,
                                   b.name,
                                   b.email,
                                   b.description,
@@ -49,6 +50,7 @@ class CandidateDAO implements UserDaoInterface{
                             name: it.name,
                             idCandidate: it.id_candidate,
                             idUser: it.id_user,
+                            password: it.password,
                             description: it.description,
                             email: it.email,
                             age: it.age,
@@ -75,7 +77,8 @@ class CandidateDAO implements UserDaoInterface{
         return allCandidates
     }
 
-    void save(User newCandidate) {
+    void save(User newUser) {
+        Candidate newCandidate = newUser as Candidate
         DatabaseConnector.executeInstance {
             Sql sql ->
                 sql.withTransaction {
@@ -87,6 +90,27 @@ class CandidateDAO implements UserDaoInterface{
                             newCandidate.address.country, newCandidate.address.state, newCandidate.address.city, newCandidate.address.district, newCandidate.address.street, newCandidate.address.number, newCandidate.address.complement, newCandidate.address.cep)
                     sql.execute("INSERT INTO user_address (id_user, id_address) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), (SELECT currval(pg_get_serial_sequence('addresses', 'id_address'))))")
                 }
+        }
+    }
+
+    void delete(User user) {
+        DatabaseConnector.executeInstance {
+            Sql sql -> sql.execute(
+                    "DELETE FROM users WHERE id_user = ${user.idUser}"
+            )
+        }
+    }
+
+    void update(User user) {
+        Candidate candidate = user as Candidate
+        DatabaseConnector.executeInstance {
+            Sql sql -> sql.withTransaction {
+                sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
+                candidate.name, candidate.password, candidate.email, candidate.description, candidate.idUser)
+                sql.executeUpdate("UPDATE candidates SET cpf = ?, birthdate = ? WHERE id_user = ?",
+                candidate.cpf, candidate.birthdate, candidate.idUser)
+
+            }
         }
     }
 }
