@@ -3,16 +3,15 @@ package model
 import model.util.CNPJ
 
 class Company extends User{
-    CNPJ cnpj
-    Integer nOpenJobs
-    Integer nJobsFullfilled
+    Integer idCompany
+    // CNPJ cnpj
+    String cnpj
 
     @Override
     String toString() {
         return """ 
- > Empresa: $name | CNPJ: $cnpj
+ > (ID: $idCompany): $name | CNPJ: $cnpj
  Descrição: $description
- Competências Desejadas: ${String.join(', ', competencies)}
 """
     }
 }

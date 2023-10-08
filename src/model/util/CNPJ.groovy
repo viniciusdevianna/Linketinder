@@ -7,7 +7,7 @@ class CNPJ implements RegisterNumber{
 
     void setNumber(String number) {
         if (!validateRegisterNumber(number, NUMBER_OF_DIGITS, LIST_OF_VALIDATION_FACTORS)) {
-            throw new IllegalArgumentException("CPF inválido")
+            throw new IllegalArgumentException("CNPJ inválido")
         }
         this.number = number
     }

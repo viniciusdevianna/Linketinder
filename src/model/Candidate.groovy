@@ -1,21 +1,24 @@
 package model
 
-import groovy.transform.ToString
 import model.util.CPF
+import model.util.Competency
+
+import java.time.LocalDate
 
 class Candidate extends User{
-    CPF cpf
+    LocalDate birthdate
+    Integer idCandidate
+//    CPF cpf
+    String cpf
     Integer age
-    List education
-    List languages
+    List<Competency> competencies
 
     @Override
     String toString() {
         return """ 
- > Candidato: $name ($age) | CPF: $cpf
+ > (Id: $idCandidate): $name ($age) | CPF: $cpf
  Descrição: $description
- Formação: ${String.join(', ' , education)}
- Competências: ${String.join(', ', competencies)}
+ Competências: ${competencies}
 """
     }
 }
