@@ -88,41 +88,41 @@ CREATE TABLE "matches" (
   "id_company" bigint NOT NULL
 );
 
-ALTER TABLE "candidates" ADD FOREIGN KEY ("id_user") REFERENCES "users" ("id_user");
+ALTER TABLE "candidates" ADD FOREIGN KEY ("id_user") REFERENCES "users" ("id_user") ON DELETE CASCADE;
 
-ALTER TABLE "companies" ADD FOREIGN KEY ("id_user") REFERENCES "users" ("id_user");
+ALTER TABLE "companies" ADD FOREIGN KEY ("id_user") REFERENCES "users" ("id_user") ON DELETE CASCADE;
 
-ALTER TABLE "jobs" ADD FOREIGN KEY ("id_company") REFERENCES "companies" ("id_company");
+ALTER TABLE "jobs" ADD FOREIGN KEY ("id_company") REFERENCES "companies" ("id_company") ON DELETE CASCADE;
 
-ALTER TABLE "candidate_competency" ADD FOREIGN KEY ("id_candidate") REFERENCES "candidates" ("id_candidate");
+ALTER TABLE "candidate_competency" ADD FOREIGN KEY ("id_candidate") REFERENCES "candidates" ("id_candidate") ON DELETE CASCADE;
 
-ALTER TABLE "candidate_competency" ADD FOREIGN KEY ("id_competency") REFERENCES "competencies" ("id_competency");
+ALTER TABLE "candidate_competency" ADD FOREIGN KEY ("id_competency") REFERENCES "competencies" ("id_competency") ON DELETE CASCADE;
 
-ALTER TABLE "job_competency" ADD FOREIGN KEY ("id_job") REFERENCES "jobs" ("id_job");
+ALTER TABLE "job_competency" ADD FOREIGN KEY ("id_job") REFERENCES "jobs" ("id_job") ON DELETE CASCADE;
 
-ALTER TABLE "job_competency" ADD FOREIGN KEY ("id_competency") REFERENCES "competencies" ("id_competency");
+ALTER TABLE "job_competency" ADD FOREIGN KEY ("id_competency") REFERENCES "competencies" ("id_competency") ON DELETE CASCADE;
 
-ALTER TABLE "addresses" ADD FOREIGN KEY ("country") REFERENCES "countries" ("id_country");
+ALTER TABLE "addresses" ADD FOREIGN KEY ("country") REFERENCES "countries" ("id_country") ON DELETE NO ACTION;
 
-ALTER TABLE "user_address" ADD FOREIGN KEY ("id_user") REFERENCES "users" ("id_user");
+ALTER TABLE "user_address" ADD FOREIGN KEY ("id_user") REFERENCES "users" ("id_user") ON DELETE CASCADE;
 
-ALTER TABLE "user_address" ADD FOREIGN KEY ("id_address") REFERENCES "addresses" ("id_address");
+ALTER TABLE "user_address" ADD FOREIGN KEY ("id_address") REFERENCES "addresses" ("id_address") ON DELETE CASCADE;
 
-ALTER TABLE "like_candidate_job" ADD FOREIGN KEY ("id_like") REFERENCES "likes" ("id_like");
+ALTER TABLE "like_candidate_job" ADD FOREIGN KEY ("id_like") REFERENCES "likes" ("id_like") ON DELETE CASCADE;
 
-ALTER TABLE "like_candidate_job" ADD FOREIGN KEY ("id_candidate") REFERENCES "candidates" ("id_candidate");
+ALTER TABLE "like_candidate_job" ADD FOREIGN KEY ("id_candidate") REFERENCES "candidates" ("id_candidate") ON DELETE CASCADE;
 
-ALTER TABLE "like_candidate_job" ADD FOREIGN KEY ("id_job") REFERENCES "jobs" ("id_job");
+ALTER TABLE "like_candidate_job" ADD FOREIGN KEY ("id_job") REFERENCES "jobs" ("id_job") ON DELETE CASCADE;
 
-ALTER TABLE "like_company_candidate" ADD FOREIGN KEY ("id_like") REFERENCES "likes" ("id_like");
+ALTER TABLE "like_company_candidate" ADD FOREIGN KEY ("id_like") REFERENCES "likes" ("id_like") ON DELETE CASCADE;
 
-ALTER TABLE "like_company_candidate" ADD FOREIGN KEY ("id_company") REFERENCES "companies" ("id_company");
+ALTER TABLE "like_company_candidate" ADD FOREIGN KEY ("id_company") REFERENCES "companies" ("id_company") ON DELETE CASCADE;
 
-ALTER TABLE "like_company_candidate" ADD FOREIGN KEY ("id_candidate") REFERENCES "candidates" ("id_candidate");
+ALTER TABLE "like_company_candidate" ADD FOREIGN KEY ("id_candidate") REFERENCES "candidates" ("id_candidate") ON DELETE CASCADE;
 
-ALTER TABLE "matches" ADD FOREIGN KEY ("id_candidate") REFERENCES "candidates" ("id_candidate");
+ALTER TABLE "matches" ADD FOREIGN KEY ("id_candidate") REFERENCES "candidates" ("id_candidate") ON DELETE CASCADE;
 
-ALTER TABLE "matches" ADD FOREIGN KEY ("id_company") REFERENCES "companies" ("id_company");
+ALTER TABLE "matches" ADD FOREIGN KEY ("id_company") REFERENCES "companies" ("id_company") ON DELETE CASCADE;
 
 INSERT INTO users (name, password, email, description) VALUES 
   ('Cloud Strife', 'Strife1!', 'cloudstrife@gmail.com', 'Programador backend júnior'),
