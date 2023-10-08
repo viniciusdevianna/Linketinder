@@ -1,17 +1,17 @@
 package model
 
-import model.util.CNPJ
-
-class Company extends User{
+class Job {
+    Integer idJob
     Integer idCompany
-    // CNPJ cnpj
-    String cnpj
+    String description
+    String location
 
     @Override
     String toString() {
         return """ 
- > Empresa: $name | CNPJ: $cnpj
+ > Vaga: $idJob
  Descrição: $description
+ Local: ${location}
 """
     }
 }

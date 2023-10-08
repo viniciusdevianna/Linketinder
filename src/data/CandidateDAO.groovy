@@ -4,9 +4,14 @@ import groovy.sql.Sql
 import model.Candidate
 import model.User
 import model.util.Address
-import model.util.CPF
+// import model.util.CPF
 
 class CandidateDAO implements UserDaoInterface{
+    private CompetencyDAO competencyDAO
+
+    CandidateDAO(CompetencyDAO competencyDAO) {
+        this.competencyDAO = competencyDAO
+    }
 
     List<Candidate> read() {
         List<Candidate> allCandidates = []
@@ -59,7 +64,7 @@ class CandidateDAO implements UserDaoInterface{
                             complement: it.complement
                     )
                     candidate.address = address
-                    candidate.competencies = []
+                    candidate.competencies = this.competencyDAO.getCompetencyByCandidate(candidate.idCandidate)
                     allCandidates.add(candidate)
                 }
             }
@@ -74,7 +79,7 @@ class CandidateDAO implements UserDaoInterface{
         DatabaseConnector.executeInstance {
             Sql sql ->
                 sql.withTransaction {
-                    sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?) RETURNING id_user",
+                    sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?)",
                             newCandidate.name, 'Default1!', newCandidate.email, newCandidate.description)
                     sql.execute("INSERT INTO candidates (id_user, cpf, birthdate) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), ?, ?)",
                                 newCandidate.cpf, Sql.DATE(newCandidate.birthdate))

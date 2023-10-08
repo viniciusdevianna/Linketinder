@@ -1,5 +1,6 @@
 package view
 
+import control.JobController
 import control.UserController
 import model.Candidate
 import model.Company
@@ -8,9 +9,6 @@ import model.util.Address
 import model.util.CNPJ
 import model.util.CPF
 import model.util.Competency
-
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -18,21 +16,24 @@ class MenuView {
     private final scanner
     private final candidateControl
     private final companyControl
+    private final jobControl
 
-    MenuView(Scanner scanner, UserController candidateControl, UserController companyControl) {
+    MenuView(Scanner scanner, UserController candidateControl, UserController companyControl, JobController jobControl) {
         this.scanner = scanner
         this.candidateControl = candidateControl
         this.companyControl = companyControl
+        this.jobControl = jobControl
     }
 
     void drawMainMenu() {
         Integer option = 0
-        while (option != 4) {
+        while (option != 5) {
             println "O que você deseja fazer?"
             println "1 - Listar candidatos"
-            println "2 - Listar empresas"
-            println "3 - Cadastrar novo usuário"
-            println "4 - Sair"
+            println "2 - Listar vagas"
+            println "3 - Listar empresas"
+            println "4 - Cadastrar novo usuário"
+            println "5 - Sair"
 
             option = scanner.nextInt()
             switch (option) {
@@ -40,12 +41,15 @@ class MenuView {
                     this.candidateControl.getAllUsers().each { println it }
                     break
                 case 2:
-                    this.companyControl.getAllUsers().each { println it }
+                    this.jobControl.getAllJobs().each { println it }
                     break
                 case 3:
-                    this.drawNewUserMenu()
+                    this.companyControl.getAllUsers().each { println it }
                     break
                 case 4:
+                    this.drawNewUserMenu()
+                    break
+                case 5:
                     println "Saindo do aplicativo..."
                     break
                 default:
@@ -105,18 +109,16 @@ class MenuView {
                     break
                 case 2:
                     print "CNPJ: "
-                    CNPJ newUserCNPJ = new CNPJ(
-                            number: scanner.nextLine()
-                    )
+                    String newUserCNPJ = scanner.nextLine()
+//                    CNPJ newUserCNPJ = new CNPJ(
+//                            number: scanner.nextLine()
+//                    )
                     Company newCompany = new Company(
                             name: newUser.name,
                             email: newUser.email,
                             description: newUser.description,
                             address: newUserAddress,
-                            competencies: newUser.competencies,
-                            cnpj: newUserCNPJ,
-                            nOpenJobs: 0,
-                            nJobsFullfilled: 0
+                            cnpj: newUserCNPJ
                     )
                     companyControl.saveUser(newCompany)
                     break

@@ -1,7 +1,7 @@
 package model.util
 
 class Competency {
-    Integer id_competency
+    Integer idCompetency
     String language
 
     @Override

@@ -2,79 +2,85 @@ package data
 
 //TODO generalizar o acesso a usuário
 
-import groovy.json.JsonBuilder
-import groovy.json.JsonSlurper
-import model.Candidate
+import groovy.sql.Sql
 import model.Company
 import model.User
 import model.util.Address
-import model.util.CNPJ
+// import model.util.CNPJ
 
 class CompanyDAO implements UserDaoInterface{
-    String path = "./data/companies.json"
-    File database = new File(path)
-    JsonSlurper parser = new JsonSlurper()
-    JsonBuilder builder = new JsonBuilder()
 
-    CompanyDAO() {
-        if (!database.exists()) {
-            GroovyShell shell = new GroovyShell()
-            shell.evaluate(new File("scripts/generateCompanies.groovy"))
+    List<Company> read() {
+        List<Company> allCompanies = []
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.eachRow(
+                        """SELECT a.id_company, 
+                                  a.cnpj,
+                                  b.id_user,
+                                  b.name,
+                                  b.email,
+                                  b.description,
+                                  c.state,
+                                  c.city,
+                                  c.district,
+                                  c.street,
+                                  c.number,
+                                  c.complement,
+                                  c.cep,
+                                  d.long as country
+                            FROM companies a,
+                                 users b,
+                                 addresses c,
+                                 countries d,
+                                 user_address e
+                            WHERE a.id_user = b.id_user AND
+                                  a.id_user = e.id_user AND
+                                  e.id_address = c.id_address AND
+                                  c.country = d.id_country"""
+                ) {
+//                   CNPJ cnpj = new CNPJ()
+//                    cnpj.number = it.cnpj
+                    Company company = new Company(
+                            name: it.name,
+                            idCompany: it.id_company,
+                            idUser: it.id_user,
+                            description: it.description,
+                            email: it.email,
+                            cnpj: it.cnpj
+                    )
+                    Address address = new Address(
+                            country: it.country,
+                            state: it.state,
+                            cep: it.cep,
+                            city: it.city,
+                            district: it.district,
+                            number: it.number,
+                            complement: it.complement
+                    )
+                    company.address = address
+                    allCompanies.add(company)
+                }
+            }
+        } catch (Exception e) {
+            println e
         }
+
+        return allCompanies
     }
 
-    List<Candidate> read() {
-        def jsonObjects = parser.parse(database)
-        def listOfCompanies = []
-        jsonObjects.each {
-            def cnpj = it["cnpj"] as CNPJ
-            def address = it["address"] as Address
-            def company = new Company(
-                    name: it["name"],
-                    email: it["email"],
-                    description: it["description"],
-                    address: address,
-                    competencies: (it["competencies"] as String).split(", "),
-                    cnpj: cnpj,
-                    nOpenJobs: it["nOpenJobs"] as Integer,
-                    nJobsFullfilled: it["nJobsFulfilled"] as Integer
-            )
-            listOfCompanies << company
-        }
-
-        return listOfCompanies
-    }
-
-    @SuppressWarnings('GroovyAssignabilityCheck')
     void save(User newCompany) {
-        builder {
-            name newCompany.name
-            email newCompany.email
-            description newCompany.description
-            address {
-                country newCompany.address.country
-                state newCompany.address.state
-                cep newCompany.address.cep
-                street newCompany.address.street
-                number newCompany.address.number
-                complement newCompany.address.complement
-            }
-            competencies newCompany.competencies
-            cnpj {
-                number newCompany.cnpj.number
-            }
-            nOpenJobs newCompany.nOpenJobs
-            nJobsFulfilled newCompany.nJobsFullfilled
+        DatabaseConnector.executeInstance {
+            Sql sql ->
+                sql.withTransaction {
+                    sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?)",
+                            newCompany.name, 'Default1!', newCompany.email, newCompany.description)
+                    sql.execute("INSERT INTO companies (id_user, cnpj) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), ?)",
+                            newCompany.cnpj)
+                    sql.execute("INSERT INTO addresses (country, state, city, district, street, number, complement, cep) VALUES ((SELECT id_country FROM countries WHERE long = ?), ?, ?, ?, ?, ?, ?, ?)",
+                            newCompany.address.country, newCompany.address.state, newCompany.address.city, newCompany.address.district, newCompany.address.street, newCompany.address.number, newCompany.address.complement, newCompany.address.cep)
+                    sql.execute("INSERT INTO user_address (id_user, id_address) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), (SELECT currval(pg_get_serial_sequence('addresses', 'id_address'))))")
+                }
         }
-        File temp = File.createTempFile(path, "temp")
-        for (line in database) {
-            if (line.contains("}]")) {
-                line = line.replace("}]", "},")
-            }
-            temp << line + "\n"
-        }
-        temp << builder.toPrettyString()
-        temp << "]"
-        temp.renameTo(path)
     }
 }

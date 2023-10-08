@@ -18,7 +18,7 @@ class Candidate extends User{
         return """ 
  > Candidato: $name ($age) | CPF: $cpf
  Descrição: $description
- Competências: ${competencies.forEach {it.language + ","}}
+ Competências: ${competencies}
 """
     }
 }
