@@ -3,8 +3,6 @@ package data
 import groovy.sql.Sql
 import model.util.Competency
 
-import javax.xml.crypto.Data
-
 class CompetencyDAO {
 
     List<Competency> getAllCompetencies() {
@@ -50,7 +48,7 @@ class CompetencyDAO {
 
     void update(Competency competency) {
         DatabaseConnector.executeInstance {
-            Sql sql -> sql.executeUpdate("UPDATE competencies SET language = ${competency.language}")
+            Sql sql -> sql.executeUpdate("UPDATE competencies SET language = ${competency.language} WHERE id_competency = ${competency.idCompetency}")
         }
     }
 
@@ -62,7 +60,7 @@ class CompetencyDAO {
 
     void save(Competency competency) {
         DatabaseConnector.executeInstance {
-            Sql sql -> sql.executeInsert("""INSERT INTO competencies (language) SELECT ${competency.language}
+            Sql sql -> sql.execute("""INSERT INTO competencies (language) SELECT ${competency.language}
                 WHERE NOT EXISTS (SELECT language FROM competencies WHERE language = ${competency.language}""")
         }
     }

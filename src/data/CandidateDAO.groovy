@@ -21,6 +21,7 @@ class CandidateDAO implements UserDaoInterface{
                         """SELECT a.id_candidate, 
                                   a.cpf,
                                   DATE_PART('YEAR',age(a.birthdate)) as age,
+                                  a.birthdate,
                                   b.id_user,
                                   b.password,
                                   b.name,
@@ -51,6 +52,7 @@ class CandidateDAO implements UserDaoInterface{
                             idCandidate: it.id_candidate,
                             idUser: it.id_user,
                             password: it.password,
+                            birthdate: it.birthdate.toLocalDate(),
                             description: it.description,
                             email: it.email,
                             age: it.age,
@@ -66,7 +68,7 @@ class CandidateDAO implements UserDaoInterface{
                             complement: it.complement
                     )
                     candidate.address = address
-                    candidate.competencies = this.competencyDAO.getCompetencyByCandidate(candidate.idCandidate)
+                    candidate.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(candidate.idCandidate, "candidate")
                     allCandidates.add(candidate)
                 }
             }
@@ -108,9 +110,73 @@ class CandidateDAO implements UserDaoInterface{
                 sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
                 candidate.name, candidate.password, candidate.email, candidate.description, candidate.idUser)
                 sql.executeUpdate("UPDATE candidates SET cpf = ?, birthdate = ? WHERE id_user = ?",
-                candidate.cpf, candidate.birthdate, candidate.idUser)
+                candidate.cpf, Sql.DATE(candidate.birthdate), candidate.idUser)
 
             }
         }
+    }
+
+    Candidate getCandidateById(Integer id) {
+        Candidate candidate = new Candidate()
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.execute(
+                        """SELECT a.id_candidate, 
+                                  a.cpf,
+                                  DATE_PART('YEAR',age(a.birthdate)) as age,
+                                  a.birthdate,
+                                  b.id_user,
+                                  b.password,
+                                  b.name,
+                                  b.email,
+                                  b.description,
+                                  c.state,
+                                  c.city,
+                                  c.district,
+                                  c.street,
+                                  c.number,
+                                  c.complement,
+                                  c.cep,
+                                  d.long as country
+                            FROM candidates a,
+                                 users b,
+                                 addresses c,
+                                 countries d,
+                                 user_address e
+                            WHERE a.id_user = b.id_user AND
+                                  a.id_user = e.id_user AND
+                                  e.id_address = c.id_address AND
+                                  c.country = d.id_country AND
+                                  a.id_candidate = ${id}"""
+                ) {
+//                    CPF cpf = new CPF()
+//                    cpf.number = it.cpf(
+                    candidate.name = it.name
+                    candidate.idCandidate = it.id_candidate
+                    candidate.idUser = it.id_user
+                    candidate.password =it.password
+                    candidate.description = it.description
+                    candidate.email = it.email
+                    candidate.age = it.age
+                    candidate.cpf = it.cpf
+                    candidate.birthdate = it.birthdate.toLocalDate()
+                    Address address = new Address(
+                            country: it.country,
+                            state: it.state,
+                            cep: it.cep,
+                            city: it.city,
+                            district: it.district,
+                            number: it.number,
+                            complement: it.complement
+                    )
+                    candidate.address = address
+                    candidate.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(candidate.idCandidate, "candidate")
+                }
+            }
+        } catch (Exception e) {
+            println e
+        }
+
+        return candidate
     }
 }

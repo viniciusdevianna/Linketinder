@@ -26,4 +26,8 @@ class JobController {
     void updateJob(Job job) {
         jobDAO.update(job)
     }
+
+    void saveJob(Job job) {
+        jobDAO.save(job)
+    }
 }

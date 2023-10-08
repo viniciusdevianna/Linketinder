@@ -9,7 +9,7 @@ import view.MenuView
 Scanner scanner = new Scanner(System.in)
 CompetencyDAO competencyDAO = new CompetencyDAO()
 CandidateDAO candidateDAO = new CandidateDAO(competencyDAO)
-JobDAO jobDAO = new JobDAO()
+JobDAO jobDAO = new JobDAO(competencyDAO)
 CompanyDAO companyDAO = new CompanyDAO()
 UserController candidateController = new UserController(candidateDAO)
 UserController companyController = new UserController(companyDAO)

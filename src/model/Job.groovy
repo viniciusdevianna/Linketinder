@@ -1,10 +1,13 @@
 package model
 
+import model.util.Competency
+
 class Job {
     Integer idJob
     Integer idCompany
     String description
     String location
+    List<Competency> competencies
 
     @Override
     String toString() {

@@ -4,6 +4,11 @@ import groovy.sql.Sql
 import model.Job
 
 class JobDAO {
+    private CompetencyDAO competencyDAO
+
+    JobDAO(CompetencyDAO competencyDAO) {
+        this.competencyDAO = competencyDAO
+    }
 
     List<Job> getAllJobs() {
         List allJobs = []
@@ -18,6 +23,7 @@ class JobDAO {
                             description: it.description,
                             location: it.locale
                     )
+                    job.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(job.idJob, "job")
                     allJobs.add(job)
                 }
             }
@@ -41,6 +47,7 @@ class JobDAO {
                             description: it.description,
                             location: it.locale
                     )
+                    job.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(job.idJob, "job")
                     companyJobs.add(job)
                 }
             }
@@ -51,6 +58,13 @@ class JobDAO {
         return companyJobs
     }
 
+    void save(Job job) {
+        DatabaseConnector.executeInstance {
+            Sql sql -> sql.execute("""INSERT INTO jobs (id_company, description, locale) VALUES 
+                (${job.idCompany}, ${job.description}, ${job.location})""")
+        }
+    }
+
     void delete(Job job) {
         DatabaseConnector.executeInstance {
             Sql sql -> sql.execute("DELETE FROM jobs WHERE id_job = ${job.idJob}")
@@ -59,7 +73,7 @@ class JobDAO {
 
     void update(Job job) {
         DatabaseConnector.executeInstance {
-            Sql sql -> sql.execute("UPDATE jobs SET description = ${job.description}, locale = ${job.location}")
+            Sql sql -> sql.execute("UPDATE jobs SET description = ${job.description}, locale = ${job.location} WHERE id_job = ${job.idJob}")
         }
     }
 }

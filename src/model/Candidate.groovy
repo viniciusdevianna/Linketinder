@@ -16,7 +16,7 @@ class Candidate extends User{
     @Override
     String toString() {
         return """ 
- > Candidato: $name ($age) | CPF: $cpf
+ > (Id: $idCandidate): $name ($age) | CPF: $cpf
  Descrição: $description
  Competências: ${competencies}
 """

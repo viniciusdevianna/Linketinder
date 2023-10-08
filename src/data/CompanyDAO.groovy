@@ -89,7 +89,7 @@ class CompanyDAO implements UserDaoInterface{
 
     void delete(User user) {
         DatabaseConnector.executeInstance {
-            Sql sql -> sql.execute("DELETE FROM user WHERE id_user = ${user.idUser}")
+            Sql sql -> sql.execute("DELETE FROM users WHERE id_user = ${user.idUser}")
         }
     }
 
@@ -99,7 +99,7 @@ class CompanyDAO implements UserDaoInterface{
             Sql sql -> sql.withTransaction {
                 sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
                         company.name, company.password, company.email, company.description, company.idUser)
-                sql.executeUpdate("UPDATE candidates SET cnpj = ? WHERE id_user = ?",
+                sql.executeUpdate("UPDATE companies SET cnpj = ? WHERE id_user = ?",
                         company.cnpj, company.idUser)
             }
         }

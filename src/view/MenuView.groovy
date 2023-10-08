@@ -4,19 +4,21 @@ import control.JobController
 import control.UserController
 import model.Candidate
 import model.Company
+import model.Job
 import model.User
 import model.util.Address
-import model.util.CNPJ
-import model.util.CPF
 import model.util.Competency
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class MenuView {
-    private final scanner
-    private final candidateControl
-    private final companyControl
-    private final jobControl
+    private final Scanner scanner
+    private final UserController candidateControl
+    private final UserController companyControl
+    private final JobController jobControl
+    List<Candidate> candidates
+    List<Company> companies
+    List<Job> jobs
 
     MenuView(Scanner scanner, UserController candidateControl, UserController companyControl, JobController jobControl) {
         this.scanner = scanner
@@ -28,6 +30,9 @@ class MenuView {
     void drawMainMenu() {
         Integer option = 0
         while (option != 5) {
+            this.candidates = candidateControl.getAllUsers() as List<Candidate>
+            this.companies = companyControl.getAllUsers() as List<Company>
+            this.jobs = jobControl.getAllJobs()
             println "O que você deseja fazer?"
             println "1 - Listar candidatos"
             println "2 - Listar vagas"
@@ -38,13 +43,16 @@ class MenuView {
             option = scanner.nextInt()
             switch (option) {
                 case 1:
-                    this.candidateControl.getAllUsers().each { println it }
+                    this.candidates.each { println it }
+                    this.drawCandidatesMenu()
                     break
                 case 2:
-                    this.jobControl.getAllJobs().each { println it }
+                    this.jobs.each { println it }
+                    this.drawJobsMenu()
                     break
                 case 3:
-                    this.companyControl.getAllUsers().each { println it }
+                    this.companies.each { println it }
+                    this.drawCompaniesMenu()
                     break
                 case 4:
                     this.drawNewUserMenu()
@@ -56,6 +64,161 @@ class MenuView {
                     println "Opção inválida"
             }
         }
+    }
+
+    void drawJobsMenu() {
+        Integer option = 0
+        while (option != 4) {
+            println "O que você deseja fazer?"
+            println "1 - Editar vaga"
+            println "2 - Apagar vaga"
+            println "3 - Inserir vaga"
+            println "4 - Voltar"
+
+            option = scanner.nextInt()
+            switch (option) {
+                case 1:
+                    println "Qual vaga deseja editar? Selecione o Id:"
+                    Integer jobId = scanner.nextInt()
+                    Job job = jobs.find {it.idJob = jobId}
+                    scanner.nextLine()
+                    this.drawEditJobMenu(job)
+                    break
+                case 2:
+                    println "Qual vaga deseja apagar? Selecione o Id:"
+                    Integer jobId = scanner.nextInt()
+                    Job job = jobs.find {it.idJob == jobId}
+                    scanner.nextLine()
+                    this.drawDeleteEntityMenu(job)
+                    break
+                case 3:
+                    this.drawNewJobMenu()
+                    break
+                case 4:
+                    println "Voltando..."
+                    break
+                default:
+                    println "Opção inválida"
+            }
+        }
+    }
+
+    void drawEditJobMenu(Job job) {
+        println "Descrição: ${job.description}"
+        String newJobDescription = scanner.nextLine()
+        if (newJobDescription != "")  job.description = newJobDescription
+        println "Local: ${job.location}"
+        String newJobLocation = scanner.nextLine()
+        if (newJobLocation != "")  job.location = newJobLocation
+        this.jobControl.updateJob(job)
+    }
+
+    void drawCandidatesMenu() {
+        Integer option = 0
+        while (option != 3) {
+            println "O que você deseja fazer?"
+            println "1 - Editar candidato"
+            println "2 - Apagar candidato"
+            println "3 - Voltar"
+
+            option = scanner.nextInt()
+            switch (option) {
+                case 1:
+                    println "Qual candidato deseja editar? Selecione o Id:"
+                    Integer candidateId = scanner.nextInt()
+                    Candidate candidate = candidates.find {it.idCandidate == candidateId}
+                    scanner.nextLine()
+                    this.drawEditCandidateMenu(candidate)
+                    break
+                case 2:
+                    println "Qual candidato deseja apagar? Selecione o Id:"
+                    Integer candidateId = scanner.nextInt()
+                    Candidate candidate = candidates.find {it.idCandidate == candidateId}
+                    scanner.nextLine()
+                    this.drawDeleteEntityMenu(candidate)
+                    break
+                case 3:
+                    println "Voltando..."
+                    break
+                default:
+                    println "Opção inválida"
+            }
+        }
+    }
+
+    void drawEditCandidateMenu(Candidate candidate) {
+        println "Nome: ${candidate.name}"
+        String newUserName = scanner.nextLine()
+        if (newUserName != "")  candidate.name = newUserName
+        println "E-mail: ${candidate.email}"
+        String newUserEmail = scanner.nextLine()
+        if (newUserEmail != "")  candidate.email = newUserEmail
+        println "Descrição: ${candidate.description}"
+        String newUserDescription = scanner.nextLine()
+        if (newUserDescription != "")  candidate.description = newUserDescription
+        println "CPF: ${candidate.cpf}"
+        String newUserCPF = scanner.nextLine()
+        if (newUserCPF != "")  candidate.cpf = newUserCPF
+        this.candidateControl.updateUser(candidate)
+    }
+
+    void drawDeleteEntityMenu(Object object) {
+        println "Tem certeza que deseja deletar (S/N)?"
+        String answer = scanner.nextLine().toUpperCase()
+        if (answer == "S") {
+            if (object instanceof Candidate) this.candidateControl.deleteUser(object)
+            if (object instanceof Company) this.companyControl.deleteUser(object)
+            if (object instanceof Job) this.jobControl.deleteJob(object)
+        }
+    }
+
+    void drawCompaniesMenu() {
+        Integer option = 0
+        while (option != 3) {
+            println "O que você deseja fazer?"
+            println "1 - Editar empresa"
+            println "2 - Apagar empresa"
+            println "3 - Voltar"
+
+            option = scanner.nextInt()
+            switch (option) {
+                case 1:
+                    println "Qual empresa deseja editar? Selecione o Id:"
+                    Integer companyId = scanner.nextInt()
+                    Company company = companies.find {it.idCompany == companyId}
+                    scanner.nextLine()
+                    this.drawEditCompanyMenu(company)
+                    break
+                case 2:
+                    println "Qual empresa deseja apagar? Selecione o Id:"
+                    Integer companyId = scanner.nextInt()
+                    Company company = companies.find {it.idCompany == companyId}
+                    scanner.nextLine()
+                    this.drawDeleteEntityMenu(company)
+                    break
+                case 3:
+                    println "Voltando..."
+                    break
+                default:
+                    println "Opção inválida"
+            }
+        }
+    }
+
+    void drawEditCompanyMenu(Company company) {
+        println "Nome: ${company.name}"
+        String newUserName = scanner.nextLine()
+        if (newUserName != "")  company.name = newUserName
+        println "E-mail: ${company.email}"
+        String newUserEmail = scanner.nextLine()
+        if (newUserEmail != "")  company.email = newUserEmail
+        println "Descrição: ${company.description}"
+        String newUserDescription = scanner.nextLine()
+        if (newUserDescription != "")  company.description = newUserDescription
+        println "CNPJ: ${company.cnpj}"
+        String newUserCNPJ = scanner.nextLine()
+        if (newUserCNPJ != "")  company.cnpj = newUserCNPJ
+        this.companyControl.updateUser(company)
     }
 
     void drawNewUserMenu() {
@@ -126,6 +289,19 @@ class MenuView {
                     println "Opção inválida"
             }
         }
+    }
+
+    void drawNewJobMenu() {
+        this.companies.each {println it}
+        print "Empresa (Id): "
+        Integer newJobCompany = scanner.nextInt()
+        scanner.nextLine()
+        print "Descrição: "
+        String newJobDescription = scanner.nextLine()
+        println "Local: "
+        String newJobLocale = scanner.nextLine()
+        Job newJob = new Job(idCompany: newJobCompany, description: newJobDescription, location: newJobLocale)
+        this.jobControl.saveJob(newJob)
     }
 
     private Address getNewUserAddress() {

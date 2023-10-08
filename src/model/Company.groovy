@@ -10,7 +10,7 @@ class Company extends User{
     @Override
     String toString() {
         return """ 
- > Empresa: $name | CNPJ: $cnpj
+ > (ID: $idCompany): $name | CNPJ: $cnpj
  Descrição: $description
 """
     }
