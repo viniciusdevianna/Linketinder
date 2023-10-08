@@ -50,4 +50,16 @@ class JobDAO {
 
         return companyJobs
     }
+
+    void delete(Job job) {
+        DatabaseConnector.executeInstance {
+            Sql sql -> sql.execute("DELETE FROM jobs WHERE id_job = ${job.idJob}")
+        }
+    }
+
+    void update(Job job) {
+        DatabaseConnector.executeInstance {
+            Sql sql -> sql.execute("UPDATE jobs SET description = ${job.description}, locale = ${job.location}")
+        }
+    }
 }

@@ -12,7 +12,12 @@ class DatabaseConnector {
 
     static executeInstance(Function execute) {
         Sql.withInstance(params) {
-            execute(it)
+            try {
+                execute(it)
+            } catch (Exception e) {
+                println e
+            }
         }
+
     }
 }

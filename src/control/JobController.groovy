@@ -18,4 +18,12 @@ class JobController {
     List<Job> getJobsByCompany(Company company) {
         jobDAO.getJobsByCompany(company.idCompany)
     }
+
+    void deleteJob(Job job) {
+        jobDAO.delete(job)
+    }
+
+    void updateJob(Job job) {
+        jobDAO.update(job)
+    }
 }
