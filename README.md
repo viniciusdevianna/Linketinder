@@ -39,12 +39,14 @@ do candidato.
 ### Back-end
 
 Para o projeto da trilha K1-T4, era necessário apenas listar os candidatos e empresas cadastrados e, opcionalmente,
-fazer cadastro de novos usuários. Para tal, basta clonar o repositório, buildar na sua IDE e rodar o arquivo `Main.groovy`
-que se encontra na pasta `src`.
+fazer cadastro de novos usuários. Para tal, basta clonar o repositório, buildar na sua IDE e rodar o arquivo `App.groovy`
+que se encontra na pasta `app/src/main/groovy/linketinder`.
 
-Na primeira vez que rodar o projeto, dois scripts gerarão arquivos `json` para candidatos e empresas, que servirão como
-base de dados. Os scripts também geram 5 candidatos e empresas aleatórios pré-cadastrados como foi pedido no enunciado.
+O projeto está integrado com um banco de dados Postgresql. Dê uma olhada na seção [Banco de Dados](#banco-de-dados) para ver
+como iniciar o BD pré-configurado. Você também precisa alterar os parâmetros de conexão com o BD para inserir seu usuário e senha.
+O arquivo se encontra na pasta `app/src/main/groovy/data` com o nome `DatabaseConnector.groovy`.
 
+Você também pode rodar o projeto diretamente pelo :elephant: Gradle, utilizando `gradle run` no terminal ou o Gradle Tools do Intellij.
 ### Front-end
 
 Para visualizar um preview do frontend, certifique-se de ter o node e o npm instalados. Depois basta entrar na pasta frontend e seguir os passos no terminal:
@@ -83,10 +85,14 @@ E gerar o banco de dados inicial, com cinco inserts de usuários e empresas, al�
 ### Frameworks e bibliotecas
 - Webpack
 - Chart.js
+- Cleave
 
-### Banco de Ddados
+### Banco de Dados
 - Postgresql
 - dbdiagram.io
+
+### Build
+- Gradle
 
 O DER e toda a modelagem do banco de dados foi feita no [dbdiagram.io](https://dbdiagram.io/home). Se você não conhece, vale a pena dar uma olhada. A ferramenta permite criar as entidades e as relações entre elas a partir de objetos semelhantes a um JSON, além de exportar o resultado em forma de imagem e script sql.
 ***
