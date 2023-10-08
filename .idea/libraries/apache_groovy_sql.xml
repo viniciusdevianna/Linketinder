@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="apache.groovy.sql" type="repository">
+    <properties maven-id="org.apache.groovy:groovy-sql:4.0.14" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/groovy-sql-4.0.14.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/groovy-4.0.14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

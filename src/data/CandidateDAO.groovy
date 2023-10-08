@@ -1,79 +1,182 @@
 package data
 
-import groovy.json.JsonBuilder
-import groovy.json.JsonSlurper
+import groovy.sql.Sql
 import model.Candidate
 import model.User
 import model.util.Address
-import model.util.CPF
+// import model.util.CPF
 
 class CandidateDAO implements UserDaoInterface{
-    String path = "./data/candidates.json"
-    File database = new File(path)
-    JsonSlurper parser = new JsonSlurper()
-    JsonBuilder builder = new JsonBuilder()
+    private CompetencyDAO competencyDAO
 
-    CandidateDAO() {
-        if (!database.exists()) {
-            GroovyShell shell = new GroovyShell()
-            shell.evaluate(new File("scripts/generateCandidates.groovy"))
+    CandidateDAO(CompetencyDAO competencyDAO) {
+        this.competencyDAO = competencyDAO
+    }
+
+    List<Candidate> getAll() {
+        List<Candidate> allCandidates = []
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.eachRow(
+                        """SELECT a.id_candidate, 
+                                  a.cpf,
+                                  DATE_PART('YEAR',age(a.birthdate)) as age,
+                                  a.birthdate,
+                                  b.id_user,
+                                  b.password,
+                                  b.name,
+                                  b.email,
+                                  b.description,
+                                  c.state,
+                                  c.city,
+                                  c.district,
+                                  c.street,
+                                  c.number,
+                                  c.complement,
+                                  c.cep,
+                                  d.long as country
+                            FROM candidates a,
+                                 users b,
+                                 addresses c,
+                                 countries d,
+                                 user_address e
+                            WHERE a.id_user = b.id_user AND
+                                  a.id_user = e.id_user AND
+                                  e.id_address = c.id_address AND
+                                  c.country = d.id_country"""
+                ) {
+//                    CPF cpf = new CPF()
+//                    cpf.number = it.cpf
+                    Candidate candidate = new Candidate(
+                            name: it.name,
+                            idCandidate: it.id_candidate,
+                            idUser: it.id_user,
+                            password: it.password,
+                            birthdate: it.birthdate.toLocalDate(),
+                            description: it.description,
+                            email: it.email,
+                            age: it.age,
+                            cpf: it.cpf
+                    )
+                    Address address = new Address(
+                            country: it.country,
+                            state: it.state,
+                            cep: it.cep,
+                            city: it.city,
+                            district: it.district,
+                            number: it.number,
+                            complement: it.complement
+                    )
+                    candidate.address = address
+                    candidate.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(candidate.idCandidate, "candidate")
+                    allCandidates.add(candidate)
+                }
+            }
+        } catch (Exception e) {
+            println e
+        }
+
+        return allCandidates
+    }
+
+    void save(User newUser) {
+        Candidate newCandidate = newUser as Candidate
+        DatabaseConnector.executeInstance {
+            Sql sql ->
+                sql.withTransaction {
+                    sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?)",
+                            newCandidate.name, 'Default1!', newCandidate.email, newCandidate.description)
+                    sql.execute("INSERT INTO candidates (id_user, cpf, birthdate) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), ?, ?)",
+                                newCandidate.cpf, Sql.DATE(newCandidate.birthdate))
+                    sql.execute("INSERT INTO addresses (country, state, city, district, street, number, complement, cep) VALUES ((SELECT id_country FROM countries WHERE long = ?), ?, ?, ?, ?, ?, ?, ?)",
+                            newCandidate.address.country, newCandidate.address.state, newCandidate.address.city, newCandidate.address.district, newCandidate.address.street, newCandidate.address.number, newCandidate.address.complement, newCandidate.address.cep)
+                    sql.execute("INSERT INTO user_address (id_user, id_address) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), (SELECT currval(pg_get_serial_sequence('addresses', 'id_address'))))")
+                }
         }
     }
 
-    List<Candidate> read() {
-        def jsonObjects = parser.parse(database)
-        def listOfCandidates = []
-        jsonObjects.each {
-            def cpf = it["cpf"] as CPF
-            def address = it["address"] as Address
-            def candidate = new Candidate(
-                    name: it["name"],
-                    email: it["email"],
-                    description: it["description"],
-                    address: address,
-                    competencies: (it["competencies"] as String).split(", "),
-                    cpf: cpf,
-                    age: it["age"] as Integer,
-                    education: (it["education"] as String).split(", "),
-                    languages: (it["languages"] as String).split(", ")
+    void delete(User user) {
+        DatabaseConnector.executeInstance {
+            Sql sql -> sql.execute(
+                    "DELETE FROM users WHERE id_user = ${user.idUser}"
             )
-            listOfCandidates << candidate
         }
-
-        return listOfCandidates
     }
 
-    @SuppressWarnings('GroovyAssignabilityCheck')
-    void save(User newCandidate) {
-        builder {
-            name newCandidate.name
-            email newCandidate.email
-            description newCandidate.description
-            address {
-                country newCandidate.address.country
-                state newCandidate.address.state
-                cep newCandidate.address.cep
-                street newCandidate.address.street
-                number newCandidate.address.number
-                complement newCandidate.address.complement
+    void update(User user) {
+        Candidate candidate = user as Candidate
+        DatabaseConnector.executeInstance {
+            Sql sql -> sql.withTransaction {
+                sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
+                candidate.name, candidate.password, candidate.email, candidate.description, candidate.idUser)
+                sql.executeUpdate("UPDATE candidates SET cpf = ?, birthdate = ? WHERE id_user = ?",
+                candidate.cpf, Sql.DATE(candidate.birthdate), candidate.idUser)
+
             }
-            competencies String.join(", ", newCandidate.competencies)
-            cpf {
-                number newCandidate.cpf.number
-            }
-            age newCandidate.age
-            education String.join(", ", newCandidate.education)
-            languages String.join(", ", newCandidate.languages)
         }
-        File temp = File.createTempFile(path, "temp")
-        for (line in database) {
-            if (line.contains("}]")) {
-               line = line.replace("}]", "},")
+    }
+
+    Candidate getCandidateById(Integer id) {
+        Candidate candidate = new Candidate()
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.execute(
+                        """SELECT a.id_candidate, 
+                                  a.cpf,
+                                  DATE_PART('YEAR',age(a.birthdate)) as age,
+                                  a.birthdate,
+                                  b.id_user,
+                                  b.password,
+                                  b.name,
+                                  b.email,
+                                  b.description,
+                                  c.state,
+                                  c.city,
+                                  c.district,
+                                  c.street,
+                                  c.number,
+                                  c.complement,
+                                  c.cep,
+                                  d.long as country
+                            FROM candidates a,
+                                 users b,
+                                 addresses c,
+                                 countries d,
+                                 user_address e
+                            WHERE a.id_user = b.id_user AND
+                                  a.id_user = e.id_user AND
+                                  e.id_address = c.id_address AND
+                                  c.country = d.id_country AND
+                                  a.id_candidate = ${id}"""
+                ) {
+//                    CPF cpf = new CPF()
+//                    cpf.number = it.cpf(
+                    candidate.name = it.name
+                    candidate.idCandidate = it.id_candidate
+                    candidate.idUser = it.id_user
+                    candidate.password =it.password
+                    candidate.description = it.description
+                    candidate.email = it.email
+                    candidate.age = it.age
+                    candidate.cpf = it.cpf
+                    candidate.birthdate = it.birthdate.toLocalDate()
+                    Address address = new Address(
+                            country: it.country,
+                            state: it.state,
+                            cep: it.cep,
+                            city: it.city,
+                            district: it.district,
+                            number: it.number,
+                            complement: it.complement
+                    )
+                    candidate.address = address
+                    candidate.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(candidate.idCandidate, "candidate")
+                }
             }
-            temp << line + "\n"
+        } catch (Exception e) {
+            println e
         }
-        temp << builder.toPrettyString()
-        temp << "]"
-        temp.renameTo(path)
+
+        return candidate
     }
 }
