@@ -23,7 +23,7 @@ class JobDAO {
                             description: it.description,
                             location: it.locale
                     )
-                    job.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(job.idJob, "job")
+                    job.competencies = this.competencyDAO.getCompetencyByJob(job.idJob)
                     allJobs.add(job)
                 }
             }

@@ -19,3 +19,4 @@ JobController jobController = new JobController(jobDAO)
 
 MenuView menu = new MenuView(scanner, candidateController, companyController, jobController)
 menu.drawMainMenu()
+scanner.close()

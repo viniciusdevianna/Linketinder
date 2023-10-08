@@ -68,7 +68,7 @@ class CandidateDAO implements UserDaoInterface{
                             complement: it.complement
                     )
                     candidate.address = address
-                    candidate.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(candidate.idCandidate, "candidate")
+                    candidate.competencies = this.competencyDAO.getCompetencyByCandidate(candidate.idCandidate)
                     allCandidates.add(candidate)
                 }
             }

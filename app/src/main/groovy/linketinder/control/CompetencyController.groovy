@@ -17,11 +17,11 @@ class CompetencyController {
     }
 
     List<Competency> getCompetenciesByCandidate(Candidate candidate) {
-        competencyDAO.getCompetencyByCandidateOrJob(candidate.idCandidate, "candidate")
+        competencyDAO.getCompetencyByCandidate(candidate.idCandidate)
     }
 
     List<Competency> getCompetenciesbyJob(Job job) {
-        competencyDAO.getCompetencyByCandidateOrJob(job.idJob, "job")
+        competencyDAO.getCompetencyByJob(job.idJob)
     }
 
     void deleteCompetency(Competency competency) {

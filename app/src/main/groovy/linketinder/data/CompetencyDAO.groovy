@@ -23,17 +23,32 @@ class CompetencyDAO {
         return allCompetencies
     }
 
-    List<Competency> getCompetencyByCandidateOrJob(Integer id, String candidateOrJob) {
-        if (candidateOrJob != "candidate" || candidateOrJob != "job") {
-            return null
-        }
-
+    List<Competency> getCompetencyByCandidate(Integer id) {
         List competencies = []
         try {
             DatabaseConnector.executeInstance {
                 Sql sql -> sql.eachRow(
-                        """SELECT a.id_competency, a.language FROM competencies a, ${candidateOrJob}_compentecy b 
-                           WHERE a.id_competency = b.id_competency AND b.id_${candidateOrJob} = ${id}""",
+                        """SELECT a.id_competency, a.language FROM competencies a, candidate_competency b 
+                           WHERE a.id_competency = b.id_competency AND b.id_candidate = ${id}""",
+                ) {
+                    Competency competency = new Competency(idCompetency: it.id_competency, language: it.language)
+                    competencies.add(competency)
+                }
+            }
+        } catch (Exception e) {
+            println e
+        }
+
+        return competencies
+    }
+
+    List<Competency> getCompetencyByJob(Integer id) {
+        List competencies = []
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.eachRow(
+                        """SELECT a.id_competency, a.language FROM competencies a, job_competency b 
+                           WHERE a.id_competency = b.id_competency AND b.id_job = ${id}""",
                 ) {
                     Competency competency = new Competency(idCompetency: it.id_competency, language: it.language)
                     competencies.add(competency)

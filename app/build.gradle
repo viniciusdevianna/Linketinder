@@ -25,6 +25,9 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:32.1.1-jre'
 
+    // Postgresql integration
+    implementation 'org.postgresql:postgresql:42.6.0'
+
     // Use the awesome Spock testing and specification framework even with Java
     testImplementation 'org.spockframework:spock-core:2.2-groovy-3.0'
     testImplementation 'junit:junit:4.13.2'
@@ -42,6 +45,10 @@ java {
 application {
     // Define the main class for the application.
     mainClass = 'linketinder.App'
+}
+
+run {
+    standardInput = System.in
 }
 
 tasks.named('test') {
