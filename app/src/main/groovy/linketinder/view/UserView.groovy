@@ -28,13 +28,13 @@ abstract class UserView {
     User getEditUserInfo(User user) {
         println "Nome: ${user.name}"
         String newUserName = this.scanner.nextLine()
-        if (newUserName != "")  user.name = newUserName
+        if (newUserName.empty)  newUserName = user.name
         println "E-mail: ${user.email}"
         String newUserEmail = this.scanner.nextLine()
-        if (newUserEmail != "")  user.email = newUserEmail
+        if (newUserEmail.empty)  newUserEmail = user.email
         println "Descrição: ${user.description}"
         String newUserDescription = this.scanner.nextLine()
-        if (newUserDescription != "")  user.description = newUserDescription
+        if (newUserDescription.empty)  newUserDescription = user.description
 
         return new User(name: newUserName, email: newUserEmail, description: newUserDescription)
     }

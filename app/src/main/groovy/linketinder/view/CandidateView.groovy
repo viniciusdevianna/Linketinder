@@ -84,11 +84,14 @@ class CandidateView extends UserView{
     }
 
     void drawEditCandidateMenu(Candidate candidate) {
-        Candidate editedCandidate = this.getEditUserInfo(candidate) as Candidate
+        User editedUser = this.getEditUserInfo(candidate)
+        candidate.name = editedUser.name
+        candidate.email = editedUser.email
+        candidate.description = editedUser.description
         println "CPF: ${candidate.cpf}"
         String newUserCPF = scanner.nextLine()
-        if (newUserCPF != "")  editedCandidate.cpf = newUserCPF
-        this.controller.updateUser(editedCandidate)
+        if (newUserCPF != "")  candidate.cpf = newUserCPF
+        this.controller.updateUser(candidate)
     }
 
 }

@@ -10,7 +10,6 @@ import linketinder.view.CandidateView
 import linketinder.view.CompanyView
 import linketinder.view.JobView
 import linketinder.view.MenuView
-import linketinder.view.NewUserView
 
 Scanner scanner = new Scanner(System.in)
 CompetencyDAO competencyDAO = new CompetencyDAO()
@@ -24,9 +23,8 @@ JobController jobController = new JobController(jobDAO)
 
 CandidateView candidateView = new CandidateView(candidateController, scanner)
 CompanyView companyView = new CompanyView(companyController, scanner)
-NewUserView newUserView = new NewUserView(candidateView, companyView, scanner)
 JobView jobView = new JobView(jobController, scanner)
 
-MenuView menu = new MenuView(scanner, candidateView, companyView, jobView, newUserView)
+MenuView menu = new MenuView(scanner, candidateView, companyView, jobView)
 menu.drawMainMenu()
 scanner.close()

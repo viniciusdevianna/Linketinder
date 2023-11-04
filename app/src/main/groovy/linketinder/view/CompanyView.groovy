@@ -48,11 +48,14 @@ class CompanyView extends UserView{
     }
 
     void drawEditCompanyMenu(Company company) {
-        Company editedCompany = this.getEditUserInfo(company) as Company
+        User editedUser = this.getEditUserInfo(company)
+        company.name = editedUser.name
+        company.email = editedUser.email
+        company.description = editedUser.description
         println "CNPJ: ${company.cnpj}"
         String newUserCNPJ = scanner.nextLine()
-        if (newUserCNPJ != "")  editedCompany.cnpj = newUserCNPJ
-        this.controller.updateUser(editedCompany)
+        if (newUserCNPJ != "")  company.cnpj = newUserCNPJ
+        this.controller.updateUser(company)
     }
 
     void drawNewUserMenu() {
