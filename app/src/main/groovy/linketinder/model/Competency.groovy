@@ -1,4 +1,4 @@
-package linketinder.model.util
+package linketinder.model
 
 class Competency {
     Integer idCompetency

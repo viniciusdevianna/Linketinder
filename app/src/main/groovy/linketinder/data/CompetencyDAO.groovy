@@ -1,7 +1,7 @@
 package linketinder.data
 
 import groovy.sql.Sql
-import linketinder.model.util.Competency
+import linketinder.model.Competency
 
 class CompetencyDAO {
 

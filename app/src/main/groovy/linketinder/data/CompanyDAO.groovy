@@ -5,7 +5,7 @@ package linketinder.data
 import groovy.sql.Sql
 import linketinder.model.Company
 import linketinder.model.User
-import linketinder.model.util.Address
+import linketinder.model.Address
 // import model.util.CNPJ
 
 class CompanyDAO implements UserDaoInterface{

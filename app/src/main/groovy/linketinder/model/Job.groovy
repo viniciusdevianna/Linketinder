@@ -1,7 +1,5 @@
 package linketinder.model
 
-import linketinder.model.util.Competency
-
 class Job {
     Integer idJob
     Integer idCompany

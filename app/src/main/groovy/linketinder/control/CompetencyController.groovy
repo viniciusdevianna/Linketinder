@@ -3,7 +3,7 @@ package linketinder.control
 import linketinder.data.CompetencyDAO
 import linketinder.model.Candidate
 import linketinder.model.Job
-import linketinder.model.util.Competency
+import linketinder.model.Competency
 
 class CompetencyController {
     private CompetencyDAO competencyDAO

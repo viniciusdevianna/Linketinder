@@ -1,7 +1,5 @@
 package linketinder.model
 
-import linketinder.model.util.CPF
-import linketinder.model.util.Competency
 
 import java.time.LocalDate
 

@@ -3,7 +3,7 @@ package linketinder.data
 import groovy.sql.Sql
 import linketinder.model.Candidate
 import linketinder.model.User
-import linketinder.model.util.Address
+import linketinder.model.Address
 // import model.util.CPF
 
 class CandidateDAO implements UserDaoInterface{
@@ -170,7 +170,7 @@ class CandidateDAO implements UserDaoInterface{
                             complement: it.complement
                     )
                     candidate.address = address
-                    candidate.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(candidate.idCandidate, "candidate")
+                    candidate.competencies = this.competencyDAO.getCompetencyByCandidate(candidate.idCandidate)
                 }
             }
         } catch (Exception e) {
