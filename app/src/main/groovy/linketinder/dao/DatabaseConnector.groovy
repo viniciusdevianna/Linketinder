@@ -1,4 +1,4 @@
-package linketinder.data
+package linketinder.dao
 
 import groovy.sql.Sql
 import org.apache.groovy.internal.util.Function

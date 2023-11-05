@@ -1,4 +1,4 @@
-package linketinder.data
+package linketinder.dao
 
 import linketinder.model.User
 

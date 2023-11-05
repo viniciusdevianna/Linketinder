@@ -1,4 +1,4 @@
-package linketinder.data
+package linketinder.dao
 
 //TODO generalizar o acesso a usuário
 

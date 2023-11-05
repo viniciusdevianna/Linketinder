@@ -1,6 +1,6 @@
 package linketinder.mocks
 
-import linketinder.data.UserDaoInterface
+import linketinder.dao.UserDaoInterface
 import linketinder.model.Company
 import linketinder.model.User
 

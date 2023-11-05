@@ -2,10 +2,10 @@ package linketinder
 
 import linketinder.control.JobController
 import linketinder.control.UserController
-import linketinder.data.CandidateDAO
-import linketinder.data.CompanyDAO
-import linketinder.data.CompetencyDAO
-import linketinder.data.JobDAO
+import linketinder.dao.CandidateDAO
+import linketinder.dao.CompanyDAO
+import linketinder.dao.CompetencyDAO
+import linketinder.dao.JobDAO
 import linketinder.view.CandidateView
 import linketinder.view.CompanyView
 import linketinder.view.JobView

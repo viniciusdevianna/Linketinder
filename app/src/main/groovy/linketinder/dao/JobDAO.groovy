@@ -1,4 +1,4 @@
-package linketinder.data
+package linketinder.dao
 
 import groovy.sql.Sql
 import linketinder.model.Job
