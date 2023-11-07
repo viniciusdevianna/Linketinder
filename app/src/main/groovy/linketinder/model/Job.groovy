@@ -13,6 +13,7 @@ class Job {
  > Vaga: $idJob
  Descrição: $description
  Local: ${location}
+ Competências: ${competencies}
 """
     }
 }

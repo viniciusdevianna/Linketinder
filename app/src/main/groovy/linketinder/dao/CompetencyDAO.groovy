@@ -1,5 +1,6 @@
 package linketinder.dao
 
+import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import linketinder.model.Competency
 
@@ -12,7 +13,7 @@ class CompetencyDAO {
                 Sql sql -> sql.eachRow(
                         "SELECT id_competency, language FROM competencies"
                 ) {
-                    Competency competency = new Competency(it as Map)
+                    Competency competency = new Competency(idCompetency: it.id_competency, language: it.language)
                     allCompetencies.add(competency)
                 }
             }
@@ -61,44 +62,141 @@ class CompetencyDAO {
         return competencies
     }
 
+    Competency getCompetencyByLanguage(String language) {
+        Competency competency = new Competency()
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> GroovyRowResult result = sql.firstRow(
+                        "SELECT id_competency, language FROM competencies WHERE language = ${language}"
+                )
+                    competency.idCompetency = result.id_competency as Integer
+                    competency.language = result.language
+            }
+        } catch (Exception e) {
+            println e
+        }
+
+        return competency.idCompetency ? competency : null
+    }
+
     void update(Competency competency) {
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.executeUpdate("UPDATE competencies SET language = ${competency.language} WHERE id_competency = ${competency.idCompetency}")
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.executeUpdate("UPDATE competencies SET language = ${competency.language} WHERE id_competency = ${competency.idCompetency}")
+            }
+        } catch (Exception e) {
+            println e
         }
     }
 
     void delete(Competency competency) {
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.execute("DELETE FROM competencies WHERE id_competency = ${competency.idCompetency}")
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.execute("DELETE FROM competencies WHERE id_competency = ${competency.idCompetency}")
+            }
+        } catch (Exception e) {
+            println e
         }
     }
 
     void save(Competency competency) {
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.execute("""INSERT INTO competencies (language) SELECT ${competency.language}
-                WHERE NOT EXISTS (SELECT language FROM competencies WHERE language = ${competency.language}""")
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.execute("""INSERT INTO competencies (language) SELECT ${competency.language}
+                WHERE NOT EXISTS (SELECT language FROM competencies WHERE language = ${competency.language})""")
+            }
+        } catch (Exception e) {
+            println e
         }
     }
 
-    void addCandidateOrJobCompetency(Integer id, String candidateOrJob, List<Competency> competencies) {
+    void addCandidateCompetencies(Integer id, List<Competency> competencies) {
         for (competency in competencies) {
             this.save(competency)
+            Competency savedCompetency = this.getCompetencyByLanguage(competency.language)
+            if (!savedCompetency) continue
             DatabaseConnector.executeInstance {
-                Sql sql -> sql.executeInsert("""INSERT INTO ${candidateOrJob}_competency (id_${candidateOrJob}, id_competency)
-                SELECT ${id}, ${competency.idCompetency}
-                WHERE NOT EXISTS (SELECT id_${candidateOrJob}, id_competency FROM ${candidateOrJob}_competency 
-                WHERE id_${candidateOrJob} = ${id} AND id_competency = ${competency.idCompetency}""")
+                Sql sql -> sql.executeInsert("""INSERT INTO candidate_competency (id_candidate, id_competency)
+            SELECT ${id}, ${savedCompetency.idCompetency}
+            WHERE NOT EXISTS (SELECT id_candidate, id_competency FROM candidate_competency 
+            WHERE id_candidate = ${id} AND id_competency = ${savedCompetency.idCompetency})""")
             }
         }
     }
 
-    void deleteCandidateOrJobCompetency(Integer id, String candidateOrJob, List<Competency> competencies) {
+    void addJobCompetencies(Integer id, List<Competency> competencies) {
+        for (competency in competencies) {
+            this.save(competency)
+            Competency savedCompetency = this.getCompetencyByLanguage(competency.language)
+            if (!savedCompetency) continue
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.executeInsert("""INSERT INTO job_competency (id_job, id_competency)
+                SELECT ${id}, ${savedCompetency.idCompetency}
+                WHERE NOT EXISTS (SELECT id_job, id_competency FROM job_competency 
+                WHERE id_job = ${id} AND id_competency = ${savedCompetency.idCompetency})""")
+            }
+        }
+    }
+
+    void deleteCandidateCompetencies(Integer id, List<Competency> competencies) {
         for (competency in competencies) {
             DatabaseConnector.executeInstance {
                 Sql sql ->
-                    sql.executeInsert("""DELETE FROM ${candidateOrJob}_competency WHERE
-                    id_${candidateOrJob} = ${id} and id_competency = ${competency.idCompetency}""")
+                    sql.executeInsert("""DELETE FROM candidate_competency WHERE
+                    id_candidate = ${id} and id_competency = ${competency.idCompetency}""")
             }
+        }
+    }
+
+    void deleteJobCompetencies(Integer id, List<Competency> competencies) {
+        for (competency in competencies) {
+            DatabaseConnector.executeInstance {
+                Sql sql ->
+                    sql.executeInsert("""DELETE FROM job_competency WHERE
+                    id_job = ${id} and id_competency = ${competency.idCompetency}""")
+            }
+        }
+    }
+
+    void updateCandidateCompetencies(Integer id, List<Competency> competencies) {
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.withTransaction {
+                    sql.execute("DELETE FROM candidate_competency WHERE id_candidate = ${id}")
+                    for (competency in competencies) {
+                        this.save(competency)
+                        Competency savedCompetency = this.getCompetencyByLanguage(competency.language)
+                        if (!savedCompetency) continue
+                        sql.executeInsert("""INSERT INTO candidate_competency (id_candidate, id_competency)
+                            SELECT ${id}, ${savedCompetency.idCompetency}
+                            WHERE NOT EXISTS (SELECT id_candidate, id_competency FROM candidate_competency 
+                            WHERE id_candidate = ${id} AND id_competency = ${savedCompetency.idCompetency})""")
+                    }
+                }
+            }
+        } catch (Exception e) {
+            println e
+        }
+    }
+
+    void updateJobCompetencies(Integer id, List<Competency> competencies) {
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.withTransaction {
+                    sql.execute("DELETE FROM job_competency WHERE id_job = ${id}")
+                    for (competency in competencies) {
+                        this.save(competency)
+                        Competency savedCompetency = this.getCompetencyByLanguage(competency.language)
+                        if (!savedCompetency) continue
+                        sql.executeInsert("""INSERT INTO job_competency (id_job, id_competency)
+                            SELECT ${id}, ${savedCompetency.idCompetency}
+                            WHERE NOT EXISTS (SELECT id_job, id_competency FROM job_competency 
+                            WHERE id_job = ${id} AND id_competency = ${savedCompetency.idCompetency})""")
+                    }
+                }
+            }
+        } catch (Exception e) {
+            println e
         }
     }
 }

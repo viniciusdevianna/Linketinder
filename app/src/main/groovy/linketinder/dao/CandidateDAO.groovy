@@ -68,7 +68,7 @@ class CandidateDAO implements UserDaoInterface{
                             complement: it.complement
                     )
                     candidate.address = address
-                    candidate.competencies = this.competencyDAO.getCompetencyByCandidate(candidate.idCandidate)
+                    candidate.competencies = this.competencyDAO.getCompetencyByCandidate(candidate.idUser)
                     allCandidates.add(candidate)
                 }
             }
@@ -80,39 +80,54 @@ class CandidateDAO implements UserDaoInterface{
     }
 
     void save(User newUser) {
-        Candidate newCandidate = newUser as Candidate
-        DatabaseConnector.executeInstance {
-            Sql sql ->
-                sql.withTransaction {
-                    sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?)",
-                            newCandidate.name, 'Default1!', newCandidate.email, newCandidate.description)
-                    sql.execute("INSERT INTO candidates (id_user, cpf, birthdate) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), ?, ?)",
+        try {
+            Candidate newCandidate = newUser as Candidate
+            DatabaseConnector.executeInstance {
+                Sql sql ->
+                    sql.withTransaction {
+                        sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?)",
+                                newCandidate.name, 'Default1!', newCandidate.email, newCandidate.description)
+                        sql.execute("INSERT INTO candidates (id_user, cpf, birthdate) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), ?, ?)",
                                 newCandidate.cpf, Sql.DATE(newCandidate.birthdate))
-                    sql.execute("INSERT INTO addresses (country, state, city, district, street, number, complement, cep) VALUES ((SELECT id_country FROM countries WHERE long = ?), ?, ?, ?, ?, ?, ?, ?)",
-                            newCandidate.address.country, newCandidate.address.state, newCandidate.address.city, newCandidate.address.district, newCandidate.address.street, newCandidate.address.number, newCandidate.address.complement, newCandidate.address.cep)
-                    sql.execute("INSERT INTO user_address (id_user, id_address) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), (SELECT currval(pg_get_serial_sequence('addresses', 'id_address'))))")
-                }
+                        sql.execute("INSERT INTO addresses (country, state, city, district, street, number, complement, cep) VALUES ((SELECT id_country FROM countries WHERE long = ?), ?, ?, ?, ?, ?, ?, ?)",
+                                newCandidate.address.country, newCandidate.address.state, newCandidate.address.city, newCandidate.address.district, newCandidate.address.street, newCandidate.address.number, newCandidate.address.complement, newCandidate.address.cep)
+                        sql.execute("INSERT INTO user_address (id_user, id_address) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), (SELECT currval(pg_get_serial_sequence('addresses', 'id_address'))))")
+                    }
+            }
+            this.competencyDAO.addCandidateCompetencies(newCandidate.idUser, newCandidate.competencies)
+        } catch (Exception e) {
+            println e
         }
+
     }
 
     void delete(User user) {
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.execute(
-                    "DELETE FROM users WHERE id_user = ${user.idUser}"
-            )
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.execute(
+                        "DELETE FROM users WHERE id_user = ${user.idUser}"
+                )
+            }
+        } catch (Exception e) {
+            println e
         }
     }
 
     void update(User user) {
-        Candidate candidate = user as Candidate
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.withTransaction {
-                sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
-                candidate.name, candidate.password, candidate.email, candidate.description, candidate.idUser)
-                sql.executeUpdate("UPDATE candidates SET cpf = ?, birthdate = ? WHERE id_user = ?",
-                candidate.cpf, Sql.DATE(candidate.birthdate), candidate.idUser)
+        try {
+            Candidate candidate = user as Candidate
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.withTransaction {
+                    sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
+                            candidate.name, candidate.password, candidate.email, candidate.description, candidate.idUser)
+                    sql.executeUpdate("UPDATE candidates SET cpf = ?, birthdate = ? WHERE id_user = ?",
+                            candidate.cpf, Sql.DATE(candidate.birthdate), candidate.idUser)
 
+                }
             }
+            this.competencyDAO.updateCandidateCompetencies(candidate.idUser, candidate.competencies)
+        } catch (Exception e) {
+            println e
         }
     }
 

@@ -33,18 +33,18 @@ class CompetencyController {
     }
 
     void addCompetenciesToCandidate(Candidate candidate, List<Competency> competencies) {
-        competencyDAO.addCandidateOrJobCompetency(candidate.idCandidate, "candidate", competencies)
+        competencyDAO.addCandidateCompetencies(candidate.idCandidate, competencies)
     }
 
     void addCompetenciesToJob(Job job, List<Competency> competencies) {
-        competencyDAO.addCandidateOrJobCompetency(job.idJob, "job", competencies)
+        competencyDAO.addJobCompetencies(job.idJob, competencies)
     }
 
     void deleteCompetenciesFromCandidate(Candidate candidate, List<Competency> competencies) {
-        competencyDAO.deleteCandidateOrJobCompetency(candidate.idCandidate, "candidate", competencies)
+        competencyDAO.deleteCandidateCompetencies(candidate.idCandidate, competencies)
     }
 
     void deleteCompetenciesFromJob(Job job, List<Competency> competencies) {
-        competencyDAO.deleteCandidateOrJobCompetency(job.idJob, "job", competencies)
+        competencyDAO.deleteJobCompetencies(job.idJob, competencies)
     }
 }

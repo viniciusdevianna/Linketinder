@@ -1,6 +1,7 @@
 package linketinder.view
 
 import linketinder.control.JobController
+import linketinder.model.Competency
 import linketinder.model.Job
 
 class JobView {
@@ -55,10 +56,22 @@ class JobView {
     void drawEditJobMenu(Job job) {
         println "Descrição: ${job.description}"
         String newJobDescription = scanner.nextLine()
-        if (newJobDescription != "")  job.description = newJobDescription
+        if (!newJobDescription.empty)  job.description = newJobDescription
         println "Local: ${job.location}"
         String newJobLocation = scanner.nextLine()
-        if (newJobLocation != "")  job.location = newJobLocation
+        if (!newJobLocation.empty)  job.location = newJobLocation
+        println "Insira as competências exigidas, separando cada item por vírgula"
+        println job.competencies
+        List jobCompetencies = []
+        String newCompetenciesString = scanner.nextLine()
+        if (!newCompetenciesString.empty) {
+            List jobCompNames = newCompetenciesString.split(",")
+            jobCompNames.forEach { language ->
+                Competency newComp = new Competency(language: language)
+                jobCompetencies.add(newComp)
+            }
+            job.competencies = jobCompetencies
+        }
         this.jobControl.updateJob(job)
     }
 
@@ -78,7 +91,14 @@ class JobView {
         String newJobDescription = scanner.nextLine()
         println "Local: "
         String newJobLocale = scanner.nextLine()
-        Job newJob = new Job(idCompany: newJobCompany, description: newJobDescription, location: newJobLocale)
+        println "Insira as competências exigidas pela vaga, separando cada item por vírgula"
+        List newJobCompetencies = []
+        List newJobCompNames = scanner.nextLine().split(",")
+        newJobCompNames.forEach { language ->
+            Competency newComp = new Competency(language: language)
+            newJobCompetencies.add(newComp)
+        }
+        Job newJob = new Job(idCompany: newJobCompany, description: newJobDescription, location: newJobLocale, competencies: newJobCompetencies)
         this.jobControl.saveJob(newJob)
     }
 }

@@ -26,5 +26,6 @@ CompanyView companyView = new CompanyView(companyController, scanner)
 JobView jobView = new JobView(jobController, scanner)
 
 MenuView menu = new MenuView(scanner, candidateView, companyView, jobView)
+
 menu.drawMainMenu()
 scanner.close()

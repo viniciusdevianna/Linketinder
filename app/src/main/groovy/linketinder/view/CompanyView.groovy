@@ -54,7 +54,7 @@ class CompanyView extends UserView{
         company.description = editedUser.description
         println "CNPJ: ${company.cnpj}"
         String newUserCNPJ = scanner.nextLine()
-        if (newUserCNPJ != "")  company.cnpj = newUserCNPJ
+        if (!newUserCNPJ.empty)  company.cnpj = newUserCNPJ
         this.controller.updateUser(company)
     }
 

@@ -1,7 +1,5 @@
 package linketinder.dao
 
-//TODO generalizar o acesso a usuário
-
 import groovy.sql.Sql
 import linketinder.model.Company
 import linketinder.model.User
@@ -72,36 +70,51 @@ class CompanyDAO implements UserDaoInterface{
     }
 
     void save(User newUser) {
-        Company newCompany = newUser as Company
-        DatabaseConnector.executeInstance {
-            Sql sql ->
-                sql.withTransaction {
-                    sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?)",
-                            newCompany.name, 'Default1!', newCompany.email, newCompany.description)
-                    sql.execute("INSERT INTO companies (id_user, cnpj) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), ?)",
-                            newCompany.cnpj)
-                    sql.execute("INSERT INTO addresses (country, state, city, district, street, number, complement, cep) VALUES ((SELECT id_country FROM countries WHERE long = ?), ?, ?, ?, ?, ?, ?, ?)",
-                            newCompany.address.country, newCompany.address.state, newCompany.address.city, newCompany.address.district, newCompany.address.street, newCompany.address.number, newCompany.address.complement, newCompany.address.cep)
-                    sql.execute("INSERT INTO user_address (id_user, id_address) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), (SELECT currval(pg_get_serial_sequence('addresses', 'id_address'))))")
-                }
+        try {
+            Company newCompany = newUser as Company
+            DatabaseConnector.executeInstance {
+                Sql sql ->
+                    sql.withTransaction {
+                        sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?)",
+                                newCompany.name, 'Default1!', newCompany.email, newCompany.description)
+                        sql.execute("INSERT INTO companies (id_user, cnpj) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), ?)",
+                                newCompany.cnpj)
+                        sql.execute("INSERT INTO addresses (country, state, city, district, street, number, complement, cep) VALUES ((SELECT id_country FROM countries WHERE long = ?), ?, ?, ?, ?, ?, ?, ?)",
+                                newCompany.address.country, newCompany.address.state, newCompany.address.city, newCompany.address.district, newCompany.address.street, newCompany.address.number, newCompany.address.complement, newCompany.address.cep)
+                        sql.execute("INSERT INTO user_address (id_user, id_address) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), (SELECT currval(pg_get_serial_sequence('addresses', 'id_address'))))")
+                    }
+            }
+        } catch (Exception e) {
+            println e
         }
+
     }
 
     void delete(User user) {
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.execute("DELETE FROM users WHERE id_user = ${user.idUser}")
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.execute("DELETE FROM users WHERE id_user = ${user.idUser}")
+            }
+        } catch (Exception e) {
+            println e
         }
+
     }
 
     void update(User user) {
         Company company = user as Company
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.withTransaction {
-                sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
-                        company.name, company.password, company.email, company.description, company.idUser)
-                sql.executeUpdate("UPDATE companies SET cnpj = ? WHERE id_user = ?",
-                        company.cnpj, company.idUser)
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.withTransaction {
+                    sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
+                            company.name, company.password, company.email, company.description, company.idUser)
+                    sql.executeUpdate("UPDATE companies SET cnpj = ? WHERE id_user = ?",
+                            company.cnpj, company.idUser)
+                }
             }
+        } catch (Exception e) {
+            println e
         }
+
     }
 }

@@ -47,7 +47,7 @@ class JobDAO {
                             description: it.description,
                             location: it.locale
                     )
-                    job.competencies = this.competencyDAO.getCompetencyByCandidateOrJob(job.idJob, "job")
+                    job.competencies = this.competencyDAO.getCompetencyByJob(job.idJob)
                     companyJobs.add(job)
                 }
             }
@@ -59,21 +59,36 @@ class JobDAO {
     }
 
     void save(Job job) {
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.execute("""INSERT INTO jobs (id_company, description, locale) VALUES 
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.execute("""INSERT INTO jobs (id_company, description, locale) VALUES 
                 (${job.idCompany}, ${job.description}, ${job.location})""")
+            }
+            this.competencyDAO.addJobCompetencies(job.idJob, job.competencies)
+        } catch (Exception e) {
+            println e
         }
+
     }
 
     void delete(Job job) {
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.execute("DELETE FROM jobs WHERE id_job = ${job.idJob}")
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.execute("DELETE FROM jobs WHERE id_job = ${job.idJob}")
+            }
+        } catch (Exception e) {
+            println e
         }
     }
 
     void update(Job job) {
-        DatabaseConnector.executeInstance {
-            Sql sql -> sql.execute("UPDATE jobs SET description = ${job.description}, locale = ${job.location} WHERE id_job = ${job.idJob}")
+        try {
+            DatabaseConnector.executeInstance {
+                Sql sql -> sql.execute("UPDATE jobs SET description = ${job.description}, locale = ${job.location} WHERE id_job = ${job.idJob}")
+            }
+            this.competencyDAO.updateJobCompetencies(job.idJob, job.competencies)
+        } catch (Exception e) {
+            println e
         }
     }
 }

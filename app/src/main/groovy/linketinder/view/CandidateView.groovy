@@ -90,7 +90,20 @@ class CandidateView extends UserView{
         candidate.description = editedUser.description
         println "CPF: ${candidate.cpf}"
         String newUserCPF = scanner.nextLine()
-        if (newUserCPF != "")  candidate.cpf = newUserCPF
+        if (!newUserCPF.empty)  candidate.cpf = newUserCPF
+        println "Insira suas competências, separando cada item por vírgula"
+        println candidate.competencies
+        List candidateCompetencies = []
+        String newCompetenciesString = scanner.nextLine()
+        if (!newCompetenciesString.empty) {
+            List candidateCompNames = newCompetenciesString.split(",")
+            candidateCompNames.forEach { language ->
+                Competency newComp = new Competency(language: language)
+                candidateCompetencies.add(newComp)
+            }
+            candidate.competencies = candidateCompetencies
+        }
+
         this.controller.updateUser(candidate)
     }
 
