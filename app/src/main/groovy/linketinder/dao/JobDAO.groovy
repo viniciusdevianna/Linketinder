@@ -60,11 +60,15 @@ class JobDAO {
 
     void save(Job job) {
         try {
+            Integer newJobId = 0
             DatabaseConnector.executeInstance {
-                Sql sql -> sql.execute("""INSERT INTO jobs (id_company, description, locale) VALUES 
-                (${job.idCompany}, ${job.description}, ${job.location})""")
+                Sql sql -> sql.withTransaction {
+                    sql.execute("""INSERT INTO jobs (id_company, description, locale) VALUES 
+                        (${job.idCompany}, ${job.description}, ${job.location})""")
+                    newJobId = sql.firstRow("SELECT currval(pg_get_serial_sequence('jobs', 'id_job'))").values()[0] as Integer
+                }
             }
-            this.competencyDAO.addJobCompetencies(job.idJob, job.competencies)
+            this.competencyDAO.addJobCompetencies(newJobId, job.competencies)
         } catch (Exception e) {
             println e
         }

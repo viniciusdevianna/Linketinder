@@ -6,15 +6,14 @@ import linketinder.model.User
 import linketinder.model.Address
 
 class CompanyView extends UserView{
-    private List<Company> companies
 
     CompanyView(UserController userController, Scanner scanner) {
         super(scanner, userController)
-        this.companies = this.controller.getAllUsers() as List<Company>
     }
 
     void drawUsersMenu() {
-        this.companies.each {println it}
+        List<Company> companies = this.controller.getAllUsers() as List<Company>
+        companies.each {println it}
         Integer option = 0
         while (option != 3) {
             println "O que você deseja fazer?"

@@ -10,10 +10,10 @@ class Job {
     @Override
     String toString() {
         return """ 
- > Vaga: $idJob
- Descrição: $description
- Local: ${location}
- Competências: ${competencies}
+ > Vaga: ${this.idJob}
+ Descrição: ${this.description}
+ Local: ${this.location}
+ Competências: ${this.competencies}
 """
     }
 }

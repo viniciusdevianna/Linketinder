@@ -68,7 +68,7 @@ class CandidateDAO implements UserDaoInterface{
                             complement: it.complement
                     )
                     candidate.address = address
-                    candidate.competencies = this.competencyDAO.getCompetencyByCandidate(candidate.idUser)
+                    candidate.competencies = this.competencyDAO.getCompetencyByCandidate(candidate.idCandidate)
                     allCandidates.add(candidate)
                 }
             }
@@ -82,6 +82,7 @@ class CandidateDAO implements UserDaoInterface{
     void save(User newUser) {
         try {
             Candidate newCandidate = newUser as Candidate
+            Integer newCandidateId = 0
             DatabaseConnector.executeInstance {
                 Sql sql ->
                     sql.withTransaction {
@@ -92,9 +93,10 @@ class CandidateDAO implements UserDaoInterface{
                         sql.execute("INSERT INTO addresses (country, state, city, district, street, number, complement, cep) VALUES ((SELECT id_country FROM countries WHERE long = ?), ?, ?, ?, ?, ?, ?, ?)",
                                 newCandidate.address.country, newCandidate.address.state, newCandidate.address.city, newCandidate.address.district, newCandidate.address.street, newCandidate.address.number, newCandidate.address.complement, newCandidate.address.cep)
                         sql.execute("INSERT INTO user_address (id_user, id_address) VALUES ((SELECT currval(pg_get_serial_sequence('users', 'id_user'))), (SELECT currval(pg_get_serial_sequence('addresses', 'id_address'))))")
+                        newCandidateId = sql.firstRow("SELECT currval(pg_get_serial_sequence('candidates', 'id_candidate'))").values()[0] as Integer
                     }
             }
-            this.competencyDAO.addCandidateCompetencies(newCandidate.idUser, newCandidate.competencies)
+            this.competencyDAO.addCandidateCompetencies(newCandidateId, newCandidate.competencies)
         } catch (Exception e) {
             println e
         }

@@ -10,16 +10,15 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class CandidateView extends UserView{
-    private List<Candidate> candidates
 
     CandidateView(UserController userController, Scanner scanner) {
         super(scanner, userController)
-        this.candidates = this.controller.getAllUsers() as List<Candidate>
     }
 
     void drawUsersMenu() {
         Integer option = 0
-        this.candidates.each { println it }
+        List<Candidate> candidates = this.controller.getAllUsers() as List<Candidate>
+        candidates.each { println it }
         while (option != 3) {
             println "O que você deseja fazer?"
             println "1 - Editar candidato"

@@ -7,16 +7,15 @@ import linketinder.model.Job
 class JobView {
     private final JobController jobControl
     private final Scanner scanner
-    private List<Job> jobs
 
     JobView(JobController jobControl, Scanner scanner) {
         this.jobControl = jobControl
         this.scanner = scanner
-        this.jobs = jobControl.getAllJobs()
     }
 
     void drawJobsMenu() {
-        this.jobs.each { println it }
+        List<Job> jobs = jobControl.getAllJobs()
+        jobs.each { println it }
         Integer option = 0
         while (option != 4) {
             println "O que você deseja fazer?"
@@ -30,7 +29,7 @@ class JobView {
                 case 1:
                     println "Qual vaga deseja editar? Selecione o Id:"
                     Integer jobId = scanner.nextInt()
-                    Job job = jobs.find {it.idJob = jobId}
+                    Job job = jobs.find {it.idJob == jobId}
                     scanner.nextLine()
                     this.drawEditJobMenu(job)
                     break
@@ -54,6 +53,7 @@ class JobView {
     }
 
     void drawEditJobMenu(Job job) {
+        println job
         println "Descrição: ${job.description}"
         String newJobDescription = scanner.nextLine()
         if (!newJobDescription.empty)  job.description = newJobDescription
