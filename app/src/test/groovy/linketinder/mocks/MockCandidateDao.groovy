@@ -1,6 +1,6 @@
 package linketinder.mocks
 
-import linketinder.dao.UserDaoInterface
+import linketinder.dao.interfaces.UserDaoInterface
 import linketinder.model.Candidate
 import linketinder.model.User
 
@@ -20,6 +20,9 @@ class MockCandidateDao implements UserDaoInterface{
     }
 
     void update(User user) {
-        if (user instanceof Candidate) candidatesArray[candidatesArray.indexOf(user)] = user
+        if (user instanceof Candidate) {
+            User userToUpdate = candidatesArray.find {user.idUser == it.idUser }
+            candidatesArray[candidatesArray.indexOf(userToUpdate)] = user
+        }
     }
 }

@@ -1,13 +1,13 @@
 package linketinder.control
 
-import linketinder.dao.JobDAO
+import linketinder.dao.interfaces.JobDaoInterface
 import linketinder.model.Company
 import linketinder.model.Job
 
 class JobController {
-    private JobDAO jobDAO
+    private JobDaoInterface jobDAO
 
-    JobController(JobDAO jobDAO) {
+    JobController(JobDaoInterface jobDAO) {
         this.jobDAO = jobDAO
     }
 

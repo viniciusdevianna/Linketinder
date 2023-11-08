@@ -1,4 +1,4 @@
-package linketinder.dao
+package linketinder.dao.interfaces
 
 import linketinder.model.User
 

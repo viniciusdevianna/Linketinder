@@ -1,6 +1,7 @@
 package linketinder.dao
 
 import groovy.sql.Sql
+import linketinder.dao.interfaces.UserDaoInterface
 import linketinder.model.Company
 import linketinder.model.User
 import linketinder.model.Address

@@ -2,9 +2,10 @@ package linketinder.dao
 
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
+import linketinder.dao.interfaces.CompetencyDaoInterface
 import linketinder.model.Competency
 
-class CompetencyDAO {
+class CompetencyDAO implements CompetencyDaoInterface{
 
     List<Competency> getAllCompetencies() {
         List allCompetencies = []

@@ -1,9 +1,10 @@
 package linketinder.dao
 
 import groovy.sql.Sql
+import linketinder.dao.interfaces.JobDaoInterface
 import linketinder.model.Job
 
-class JobDAO {
+class JobDAO implements JobDaoInterface{
     private CompetencyDAO competencyDAO
 
     JobDAO(CompetencyDAO competencyDAO) {
