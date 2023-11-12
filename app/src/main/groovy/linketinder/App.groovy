@@ -6,29 +6,41 @@ import linketinder.dao.CandidateDAO
 import linketinder.dao.CompanyDAO
 import linketinder.dao.CompetencyDAO
 import linketinder.dao.JobDAO
-import linketinder.dao.PostgresqlDatabaseConnector
+import linketinder.dao.enums.DatabaseTypes
+import linketinder.dao.factories.DatabaseConnectorFactory
+import linketinder.dao.interfaces.IDatabaseConnector
 import linketinder.view.CandidateView
 import linketinder.view.CompanyView
 import linketinder.view.JobView
 import linketinder.view.MenuView
 
-Scanner scanner = new Scanner(System.in)
+import java.security.InvalidParameterException
 
-PostgresqlDatabaseConnector dbConnector = PostgresqlDatabaseConnector.getInstance()
-CompetencyDAO competencyDAO = new CompetencyDAO(dbConnector)
-CandidateDAO candidateDAO = new CandidateDAO(competencyDAO, dbConnector)
-JobDAO jobDAO = new JobDAO(competencyDAO, dbConnector)
-CompanyDAO companyDAO = new CompanyDAO(dbConnector)
+try {
+    Scanner scanner = new Scanner(System.in)
 
-UserController candidateController = new UserController(candidateDAO)
-UserController companyController = new UserController(companyDAO)
-JobController jobController = new JobController(jobDAO)
+    IDatabaseConnector dbConnector = new DatabaseConnectorFactory().getConnector(DatabaseTypes.POSTGRESQL)
+    CompetencyDAO competencyDAO = new CompetencyDAO(dbConnector)
+    CandidateDAO candidateDAO = new CandidateDAO(competencyDAO, dbConnector)
+    JobDAO jobDAO = new JobDAO(competencyDAO, dbConnector)
+    CompanyDAO companyDAO = new CompanyDAO(dbConnector)
 
-CandidateView candidateView = new CandidateView(candidateController, scanner)
-CompanyView companyView = new CompanyView(companyController, scanner)
-JobView jobView = new JobView(jobController, scanner)
+    UserController candidateController = new UserController(candidateDAO)
+    UserController companyController = new UserController(companyDAO)
+    JobController jobController = new JobController(jobDAO)
 
-MenuView menu = new MenuView(scanner, candidateView, companyView, jobView)
+    CandidateView candidateView = new CandidateView(candidateController, scanner)
+    CompanyView companyView = new CompanyView(companyController, scanner)
+    JobView jobView = new JobView(jobController, scanner)
 
-menu.drawMainMenu()
-scanner.close()
+    MenuView menu = new MenuView(scanner, candidateView, companyView, jobView)
+
+    menu.drawMainMenu()
+    scanner.close()
+} catch (InvalidParameterException e) {
+    e.printStackTrace()
+    println "Finalizando programa com erro..."
+} catch (Exception e) {
+    e.printStackTrace()
+}
+
