@@ -1,12 +1,12 @@
 package linketinder.control
 
-import linketinder.dao.interfaces.UserDaoInterface
+import linketinder.dao.interfaces.IUserDao
 import linketinder.model.User
 
 class UserController {
-    private UserDaoInterface userDao
+    private IUserDao userDao
 
-    UserController(UserDaoInterface userDao) {
+    UserController(IUserDao userDao) {
         this.userDao = userDao
     }
 

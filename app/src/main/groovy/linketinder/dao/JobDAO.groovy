@@ -1,20 +1,24 @@
 package linketinder.dao
 
 import groovy.sql.Sql
-import linketinder.dao.interfaces.JobDaoInterface
+import linketinder.dao.interfaces.ICompetencyDao
+import linketinder.dao.interfaces.IDatabaseConnector
+import linketinder.dao.interfaces.IJobDao
 import linketinder.model.Job
 
-class JobDAO implements JobDaoInterface{
-    private CompetencyDAO competencyDAO
+class JobDAO implements IJobDao{
+    private ICompetencyDao competencyDAO
+    private IDatabaseConnector databaseConnector
 
-    JobDAO(CompetencyDAO competencyDAO) {
+    JobDAO(ICompetencyDao competencyDAO, IDatabaseConnector databaseConnector) {
         this.competencyDAO = competencyDAO
+        this.databaseConnector = databaseConnector
     }
 
     List<Job> getAllJobs() {
         List allJobs = []
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.eachRow(
                         """SELECT id_job, id_company, description, locale FROM jobs"""
                 ) {
@@ -38,7 +42,7 @@ class JobDAO implements JobDaoInterface{
     List<Job> getJobsByCompany(Integer idCompany) {
         List companyJobs = []
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.eachRow(
                         """SELECT id_job, description, locale FROM jobs WHERE id_company = ${idCompany}"""
                 ) {
@@ -62,7 +66,7 @@ class JobDAO implements JobDaoInterface{
     void save(Job job) {
         try {
             Integer newJobId = 0
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.withTransaction {
                     sql.execute("""INSERT INTO jobs (id_company, description, locale) VALUES 
                         (${job.idCompany}, ${job.description}, ${job.location})""")
@@ -78,7 +82,7 @@ class JobDAO implements JobDaoInterface{
 
     void delete(Job job) {
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.execute("DELETE FROM jobs WHERE id_job = ${job.idJob}")
             }
         } catch (Exception e) {
@@ -88,7 +92,7 @@ class JobDAO implements JobDaoInterface{
 
     void update(Job job) {
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.execute("UPDATE jobs SET description = ${job.description}, locale = ${job.location} WHERE id_job = ${job.idJob}")
             }
             this.competencyDAO.updateJobCompetencies(job.idJob, job.competencies)

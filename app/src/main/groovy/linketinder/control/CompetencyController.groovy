@@ -1,14 +1,14 @@
 package linketinder.control
 
-import linketinder.dao.interfaces.CompetencyDaoInterface
+import linketinder.dao.interfaces.ICompetencyDao
 import linketinder.model.Candidate
 import linketinder.model.Job
 import linketinder.model.Competency
 
 class CompetencyController {
-    private CompetencyDaoInterface competencyDAO
+    private ICompetencyDao competencyDAO
 
-    CompetencyController(CompetencyDaoInterface competencyDAO) {
+    CompetencyController(ICompetencyDao competencyDAO) {
         this.competencyDAO = competencyDAO
     }
 

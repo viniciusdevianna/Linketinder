@@ -6,16 +6,19 @@ import linketinder.dao.CandidateDAO
 import linketinder.dao.CompanyDAO
 import linketinder.dao.CompetencyDAO
 import linketinder.dao.JobDAO
+import linketinder.dao.PostgresqlDatabaseConnector
 import linketinder.view.CandidateView
 import linketinder.view.CompanyView
 import linketinder.view.JobView
 import linketinder.view.MenuView
 
 Scanner scanner = new Scanner(System.in)
-CompetencyDAO competencyDAO = new CompetencyDAO()
-CandidateDAO candidateDAO = new CandidateDAO(competencyDAO)
-JobDAO jobDAO = new JobDAO(competencyDAO)
-CompanyDAO companyDAO = new CompanyDAO()
+
+PostgresqlDatabaseConnector dbConnector = PostgresqlDatabaseConnector.getInstance()
+CompetencyDAO competencyDAO = new CompetencyDAO(dbConnector)
+CandidateDAO candidateDAO = new CandidateDAO(competencyDAO, dbConnector)
+JobDAO jobDAO = new JobDAO(competencyDAO, dbConnector)
+CompanyDAO companyDAO = new CompanyDAO(dbConnector)
 
 UserController candidateController = new UserController(candidateDAO)
 UserController companyController = new UserController(companyDAO)

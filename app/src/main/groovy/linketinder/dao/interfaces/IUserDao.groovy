@@ -2,7 +2,7 @@ package linketinder.dao.interfaces
 
 import linketinder.model.User
 
-interface UserDaoInterface {
+interface IUserDao {
     List<User> getAll()
     void save(User newUser)
     void delete(User user)

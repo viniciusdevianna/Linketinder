@@ -1,23 +1,26 @@
 package linketinder.dao
 
 import groovy.sql.Sql
-import linketinder.dao.interfaces.UserDaoInterface
+import linketinder.dao.interfaces.IDatabaseConnector
+import linketinder.dao.interfaces.IUserDao
 import linketinder.model.Candidate
 import linketinder.model.User
 import linketinder.model.Address
 // import model.util.CPF
 
-class CandidateDAO implements UserDaoInterface{
+class CandidateDAO implements IUserDao{
     private CompetencyDAO competencyDAO
+    private IDatabaseConnector databaseConnector
 
-    CandidateDAO(CompetencyDAO competencyDAO) {
+    CandidateDAO(CompetencyDAO competencyDAO, IDatabaseConnector databaseConnector) {
         this.competencyDAO = competencyDAO
+        this.databaseConnector = databaseConnector
     }
 
     List<Candidate> getAll() {
         List<Candidate> allCandidates = []
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.eachRow(
                         """SELECT a.id_candidate, 
                                   a.cpf,
@@ -84,7 +87,7 @@ class CandidateDAO implements UserDaoInterface{
         try {
             Candidate newCandidate = newUser as Candidate
             Integer newCandidateId = 0
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql ->
                     sql.withTransaction {
                         sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?)",
@@ -106,7 +109,7 @@ class CandidateDAO implements UserDaoInterface{
 
     void delete(User user) {
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.execute(
                         "DELETE FROM users WHERE id_user = ${user.idUser}"
                 )
@@ -119,7 +122,7 @@ class CandidateDAO implements UserDaoInterface{
     void update(User user) {
         try {
             Candidate candidate = user as Candidate
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.withTransaction {
                     sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
                             candidate.name, candidate.password, candidate.email, candidate.description, candidate.idUser)
@@ -137,7 +140,7 @@ class CandidateDAO implements UserDaoInterface{
     Candidate getCandidateById(Integer id) {
         Candidate candidate = new Candidate()
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.execute(
                         """SELECT a.id_candidate, 
                                   a.cpf,

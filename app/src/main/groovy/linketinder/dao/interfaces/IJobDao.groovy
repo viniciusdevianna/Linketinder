@@ -2,7 +2,7 @@ package linketinder.dao.interfaces
 
 import linketinder.model.Job
 
-interface JobDaoInterface {
+interface IJobDao {
     List<Job> getAllJobs()
     List<Job> getJobsByCompany(Integer idCompany)
     void save(Job job)

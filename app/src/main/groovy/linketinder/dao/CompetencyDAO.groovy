@@ -2,15 +2,21 @@ package linketinder.dao
 
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
-import linketinder.dao.interfaces.CompetencyDaoInterface
+import linketinder.dao.interfaces.ICompetencyDao
+import linketinder.dao.interfaces.IDatabaseConnector
 import linketinder.model.Competency
 
-class CompetencyDAO implements CompetencyDaoInterface{
+class CompetencyDAO implements ICompetencyDao{
+    private IDatabaseConnector databaseConnector
+
+    CompetencyDAO(IDatabaseConnector databaseConnector) {
+        this.databaseConnector = databaseConnector
+    }
 
     List<Competency> getAllCompetencies() {
         List allCompetencies = []
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.eachRow(
                         "SELECT id_competency, language FROM competencies"
                 ) {
@@ -28,7 +34,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
     List<Competency> getCompetencyByCandidate(Integer id) {
         List competencies = []
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.eachRow(
                         """SELECT a.id_competency, a.language FROM competencies a, candidate_competency b 
                            WHERE a.id_competency = b.id_competency AND b.id_candidate = ${id}""",
@@ -47,7 +53,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
     List<Competency> getCompetencyByJob(Integer id) {
         List competencies = []
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.eachRow(
                         """SELECT a.id_competency, a.language FROM competencies a, job_competency b 
                            WHERE a.id_competency = b.id_competency AND b.id_job = ${id}""",
@@ -66,7 +72,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
     Competency getCompetencyByLanguage(String language) {
         Competency competency = new Competency()
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> GroovyRowResult result = sql.firstRow(
                         "SELECT id_competency, language FROM competencies WHERE language = ${language}"
                 )
@@ -82,7 +88,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
 
     void update(Competency competency) {
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.executeUpdate("UPDATE competencies SET language = ${competency.language} WHERE id_competency = ${competency.idCompetency}")
             }
         } catch (Exception e) {
@@ -92,7 +98,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
 
     void delete(Competency competency) {
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.execute("DELETE FROM competencies WHERE id_competency = ${competency.idCompetency}")
             }
         } catch (Exception e) {
@@ -102,7 +108,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
 
     void save(Competency competency) {
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.execute("""INSERT INTO competencies (language) SELECT ${competency.language}
                 WHERE NOT EXISTS (SELECT language FROM competencies WHERE language = ${competency.language})""")
             }
@@ -116,7 +122,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
             this.save(competency)
             Competency savedCompetency = this.getCompetencyByLanguage(competency.language)
             if (!savedCompetency) continue
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.executeInsert("""INSERT INTO candidate_competency (id_candidate, id_competency)
             SELECT ${id}, ${savedCompetency.idCompetency}
             WHERE NOT EXISTS (SELECT id_candidate, id_competency FROM candidate_competency 
@@ -130,7 +136,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
             this.save(competency)
             Competency savedCompetency = this.getCompetencyByLanguage(competency.language)
             if (!savedCompetency) continue
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.executeInsert("""INSERT INTO job_competency (id_job, id_competency)
                 SELECT ${id}, ${savedCompetency.idCompetency}
                 WHERE NOT EXISTS (SELECT id_job, id_competency FROM job_competency 
@@ -141,7 +147,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
 
     void deleteCandidateCompetencies(Integer id, List<Competency> competencies) {
         for (competency in competencies) {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql ->
                     sql.executeInsert("""DELETE FROM candidate_competency WHERE
                     id_candidate = ${id} and id_competency = ${competency.idCompetency}""")
@@ -151,7 +157,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
 
     void deleteJobCompetencies(Integer id, List<Competency> competencies) {
         for (competency in competencies) {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql ->
                     sql.executeInsert("""DELETE FROM job_competency WHERE
                     id_job = ${id} and id_competency = ${competency.idCompetency}""")
@@ -161,7 +167,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
 
     void updateCandidateCompetencies(Integer id, List<Competency> competencies) {
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.withTransaction {
                     sql.execute("DELETE FROM candidate_competency WHERE id_candidate = ${id}")
                     for (competency in competencies) {
@@ -182,7 +188,7 @@ class CompetencyDAO implements CompetencyDaoInterface{
 
     void updateJobCompetencies(Integer id, List<Competency> competencies) {
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.withTransaction {
                     sql.execute("DELETE FROM job_competency WHERE id_job = ${id}")
                     for (competency in competencies) {

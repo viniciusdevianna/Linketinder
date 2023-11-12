@@ -1,18 +1,24 @@
 package linketinder.dao
 
 import groovy.sql.Sql
-import linketinder.dao.interfaces.UserDaoInterface
+import linketinder.dao.interfaces.IDatabaseConnector
+import linketinder.dao.interfaces.IUserDao
 import linketinder.model.Company
 import linketinder.model.User
 import linketinder.model.Address
 // import model.util.CNPJ
 
-class CompanyDAO implements UserDaoInterface{
+class CompanyDAO implements IUserDao{
+    private IDatabaseConnector databaseConnector
+
+    CompanyDAO(IDatabaseConnector databaseConnector) {
+        this.databaseConnector = databaseConnector
+    }
 
     List<Company> getAll() {
         List<Company> allCompanies = []
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.eachRow(
                         """SELECT a.id_company, 
                                   a.cnpj,
@@ -73,7 +79,7 @@ class CompanyDAO implements UserDaoInterface{
     void save(User newUser) {
         try {
             Company newCompany = newUser as Company
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql ->
                     sql.withTransaction {
                         sql.execute("INSERT INTO users (name, password, email, description) VALUES (?, ?, ?, ?)",
@@ -93,7 +99,7 @@ class CompanyDAO implements UserDaoInterface{
 
     void delete(User user) {
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.execute("DELETE FROM users WHERE id_user = ${user.idUser}")
             }
         } catch (Exception e) {
@@ -105,7 +111,7 @@ class CompanyDAO implements UserDaoInterface{
     void update(User user) {
         Company company = user as Company
         try {
-            DatabaseConnector.executeInstance {
+            this.databaseConnector.executeInstance {
                 Sql sql -> sql.withTransaction {
                     sql.executeUpdate("UPDATE users SET name = ?, password = ?, email = ?, description = ? WHERE id_user = ?",
                             company.name, company.password, company.email, company.description, company.idUser)

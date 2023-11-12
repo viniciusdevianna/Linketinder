@@ -2,7 +2,7 @@ package linketinder.dao.interfaces
 
 import linketinder.model.Competency
 
-interface CompetencyDaoInterface {
+interface ICompetencyDao {
     List<Competency> getAllCompetencies()
     List<Competency> getCompetencyByCandidate(Integer id)
     List<Competency> getCompetencyByJob(Integer id)

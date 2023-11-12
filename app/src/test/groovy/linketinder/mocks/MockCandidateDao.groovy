@@ -1,10 +1,10 @@
 package linketinder.mocks
 
-import linketinder.dao.interfaces.UserDaoInterface
+import linketinder.dao.interfaces.IUserDao
 import linketinder.model.Candidate
 import linketinder.model.User
 
-class MockCandidateDao implements UserDaoInterface{
+class MockCandidateDao implements IUserDao{
     private List<Candidate> candidatesArray = new ArrayList<>()
 
     List<Candidate> getAll() {
