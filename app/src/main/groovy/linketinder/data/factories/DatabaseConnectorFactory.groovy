@@ -1,8 +1,8 @@
-package linketinder.dao.factories
+package linketinder.data.factories
 
-import linketinder.dao.PostgresqlDatabaseConnector
-import linketinder.dao.enums.DatabaseTypes
-import linketinder.dao.interfaces.IDatabaseConnector
+import linketinder.data.PostgresqlDatabaseConnector
+import linketinder.data.enums.DatabaseTypes
+import linketinder.data.interfaces.IDatabaseConnector
 
 import java.security.InvalidParameterException
 

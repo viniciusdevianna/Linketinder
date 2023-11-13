@@ -1,6 +1,6 @@
 package linketinder.control
 
-import linketinder.dao.interfaces.IJobDao
+import linketinder.data.interfaces.IJobDao
 import linketinder.model.Company
 import linketinder.model.Job
 

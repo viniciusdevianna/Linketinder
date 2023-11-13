@@ -1,9 +1,9 @@
 package linketinder.mocks
 
-import linketinder.dao.interfaces.ICompetencyDao
+import linketinder.data.interfaces.ICompetencyDao
 import linketinder.model.Competency
 
-class MockICompetencyDao implements ICompetencyDao{
+class MockCompetencyDao implements ICompetencyDao{
     private List<Competency> competencies = new ArrayList<>()
 
     List<Competency> getAllCompetencies() {

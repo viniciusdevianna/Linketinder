@@ -1,9 +1,9 @@
-package linketinder.dao
+package linketinder.data
 
 import groovy.sql.Sql
-import linketinder.dao.interfaces.ICompetencyDao
-import linketinder.dao.interfaces.IDatabaseConnector
-import linketinder.dao.interfaces.IJobDao
+import linketinder.data.interfaces.ICompetencyDao
+import linketinder.data.interfaces.IDatabaseConnector
+import linketinder.data.interfaces.IJobDao
 import linketinder.model.Job
 
 class JobDAO implements IJobDao{

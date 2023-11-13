@@ -1,8 +1,8 @@
-package linketinder.dao
+package linketinder.data
 
 import groovy.sql.Sql
-import linketinder.dao.interfaces.IDatabaseConnector
-import linketinder.dao.interfaces.IUserDao
+import linketinder.data.interfaces.IDatabaseConnector
+import linketinder.data.interfaces.IUserDao
 import linketinder.model.Candidate
 import linketinder.model.User
 import linketinder.model.Address

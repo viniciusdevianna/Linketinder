@@ -1,9 +1,9 @@
 package linketinder.mocks
 
-import linketinder.dao.interfaces.IJobDao
+import linketinder.data.interfaces.IJobDao
 import linketinder.model.Job
 
-class MockIJobDao implements IJobDao{
+class MockJobDao implements IJobDao{
     private List<Job> jobs = new ArrayList<>()
 
     List<Job> getAllJobs() {

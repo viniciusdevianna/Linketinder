@@ -1,6 +1,6 @@
 package linketinder.control
 
-import linketinder.dao.interfaces.ICompetencyDao
+import linketinder.data.interfaces.ICompetencyDao
 import linketinder.model.Candidate
 import linketinder.model.Job
 import linketinder.model.Competency

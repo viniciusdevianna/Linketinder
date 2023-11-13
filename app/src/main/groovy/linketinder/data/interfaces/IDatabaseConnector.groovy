@@ -1,4 +1,4 @@
-package linketinder.dao.interfaces
+package linketinder.data.interfaces
 
 import org.apache.groovy.internal.util.Function
 

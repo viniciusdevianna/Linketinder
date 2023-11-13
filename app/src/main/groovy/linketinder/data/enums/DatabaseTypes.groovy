@@ -1,4 +1,4 @@
-package linketinder.dao.enums
+package linketinder.data.enums
 
 enum DatabaseTypes {
     POSTGRESQL,

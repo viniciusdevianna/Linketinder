@@ -1,6 +1,6 @@
 package linketinder.control
 
-import linketinder.dao.interfaces.IUserDao
+import linketinder.data.interfaces.IUserDao
 import linketinder.model.User
 
 class UserController {

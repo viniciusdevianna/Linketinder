@@ -2,13 +2,13 @@ package linketinder
 
 import linketinder.control.JobController
 import linketinder.control.UserController
-import linketinder.dao.CandidateDAO
-import linketinder.dao.CompanyDAO
-import linketinder.dao.CompetencyDAO
-import linketinder.dao.JobDAO
-import linketinder.dao.enums.DatabaseTypes
-import linketinder.dao.factories.DatabaseConnectorFactory
-import linketinder.dao.interfaces.IDatabaseConnector
+import linketinder.data.CandidateDAO
+import linketinder.data.CompanyDAO
+import linketinder.data.CompetencyDAO
+import linketinder.data.JobDAO
+import linketinder.data.enums.DatabaseTypes
+import linketinder.data.factories.DatabaseConnectorFactory
+import linketinder.data.interfaces.IDatabaseConnector
 import linketinder.view.CandidateView
 import linketinder.view.CompanyView
 import linketinder.view.JobView

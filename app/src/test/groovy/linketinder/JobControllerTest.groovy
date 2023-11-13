@@ -1,7 +1,7 @@
 package linketinder
 
 import linketinder.control.JobController
-import linketinder.mocks.MockIJobDao
+import linketinder.mocks.MockJobDao
 import linketinder.model.Company
 import linketinder.model.Job
 import org.junit.jupiter.api.Test
@@ -14,7 +14,7 @@ class JobControllerTest {
     void testSavingNewJob() {
         // Given
         Job newJob = new Job()
-        this.jobController = new JobController(new MockIJobDao())
+        this.jobController = new JobController(new MockJobDao())
 
         // When
         this.jobController.saveJob(newJob)
@@ -27,7 +27,7 @@ class JobControllerTest {
     @Test
     void testDeletingJob() {
         // Given
-        this.jobController = new JobController(new MockIJobDao())
+        this.jobController = new JobController(new MockJobDao())
         Job job1 = new Job()
         Job job2 = new Job()
         this.jobController.saveJob(job1)
@@ -44,7 +44,7 @@ class JobControllerTest {
     @Test
     void testUpdatingJob() {
         // Given
-        this.jobController = new JobController(new MockIJobDao())
+        this.jobController = new JobController(new MockJobDao())
         Job job = new Job(idJob: 1, description: "Teste")
         Job updatedJob = new Job(idJob: 1, description: "Novo")
         this.jobController.saveJob(job)
@@ -60,7 +60,7 @@ class JobControllerTest {
     @Test
     void testGettingJobsByCompany() {
         // Given
-        this.jobController = new JobController(new MockIJobDao())
+        this.jobController = new JobController(new MockJobDao())
         Job job1 = new Job(idCompany: 1, description: "Job da primeira empresa")
         Job job2 = new Job(idCompany: 2, description: "Job da segunda empresa")
         Company company = new Company(idCompany: 1)

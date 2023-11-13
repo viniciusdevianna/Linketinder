@@ -1,7 +1,7 @@
-package linketinder.dao
+package linketinder.data
 
 import groovy.sql.Sql
-import linketinder.dao.interfaces.IDatabaseConnector
+import linketinder.data.interfaces.IDatabaseConnector
 import org.apache.groovy.internal.util.Function
 
 class PostgresqlDatabaseConnector implements IDatabaseConnector{
@@ -14,8 +14,8 @@ class PostgresqlDatabaseConnector implements IDatabaseConnector{
         if (instance == null) {
             params = [
                     url: "jdbc:postgresql://localhost:5432/linketinder",
-                    user: "viniciusvianna",
-                    password: "postgres"
+                    user: "postgres",
+                    password: "DevU!1807"
             ]
             instance = new PostgresqlDatabaseConnector()
         }
