@@ -11,6 +11,14 @@ class PostgresqlDatabaseConnector implements IDatabaseConnector{
     private PostgresqlDatabaseConnector() {}
 
     static PostgresqlDatabaseConnector getInstance() {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Where is your PostgreSQL JDBC Driver? "
+                    + "Include in your library path!");
+            e.printStackTrace();
+        }
+
         if (instance == null) {
             params = [
                     url: "jdbc:postgresql://localhost:5432/linketinder",

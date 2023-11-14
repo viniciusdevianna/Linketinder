@@ -13,6 +13,6 @@ class API extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("Tomcat funcionando")
+        resp.getWriter().println("Linketinder API")
     }
 }

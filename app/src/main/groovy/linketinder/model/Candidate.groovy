@@ -19,4 +19,18 @@ class Candidate extends User{
  Competências: ${competencies}
 """
     }
+
+    Map<String, String> toMap() {
+        return [
+                "idUser": this.idUser.toString(),
+                "idCandidate": this.idCandidate.toString(),
+                "name": this.name,
+                "email": this.email,
+                "description": this.description,
+                "address": this.address.toString(),
+                "birthdate": this.birthdate.toString(),
+                "agr": this.age.toString(),
+                "competencies": this.competencies.toString()
+        ]
+    }
 }
